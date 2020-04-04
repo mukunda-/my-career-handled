@@ -1,9 +1,66 @@
+@font-face {
+  font-family: "Pokemon";
+  src: url(./fonts/Pokemon.woff) format('woff');
+}
+
 .App {
-  background-color: rgb(194, 240, 247);
+  background-color: #c4eee0;
   margin: 0px auto;
   transform-origin: top left;
+  overflow: hidden;
 }
 
 .Sprite {
   position: absolute;
+}
+
+.Speechbox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 512px;
+  height: 96px;
+  overflow: hidden;
+}
+
+.Speechbox .frame {
+  background: url(./res/nostalgia.png);
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 512px;
+  height: 96px;
+  overflow: hidden;
+  
+}
+
+.Speechbox .avatar {
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  width: 90px;
+  height: 76px;
+  overflow: hidden;
+}
+
+.Speechbox .text {
+  font-family: "Pokemon", sans-serif;
+  font-size: 16px;
+  position: absolute;
+  left: 98px;
+  top: 12px;
+  width: 402px;
+  height: 72px;
+  overflow: hidden;
+  line-height: 1.25em;
+}
+
+.Speechbox .text .inner {
+  padding: 8px;
+  position: absolute;
+  top: -12px;
+}
+
+.invisible {
+  color: transparent;
 }
