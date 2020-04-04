@@ -164,16 +164,104 @@ class Animations {
    }
 }
 
-class Chris extends Entity {
-
-}
-
 class Truck extends Entity {
-   update( time ) {
-      this.x = camera[0] - 400;
-
+   constructor() {
+      super();
+      this.x = camera[0] - 100;
+      this.y = roadLevel;
    }
 
+   rollUp() {
+      this.rollingUp = true;
+   }
+
+   gogogo() {
+      this.going = true;
+   }
+
+   update( updateTime ) {
+      if( this.rollingUp ) {
+         this.x += updateTime * 150;
+         if( this.x >= camera[0] + 220 ) {
+            this.rollingUp = false;
+            this.rolledUp = true;
+         }
+      } else if( this.going ) {
+         this.accel += Math.min( 0.25 * updateTime, 1 );
+         this.x += updateTime * 20 * this.accel;
+      }
+
+      let left = this.x - camera[0] - 81;
+      let top = this.y - camera[1] - 80;
+
+      // wheel diameter = 23 pixels
+      let wheelRotation = (this.x / (Math.PI * 23) * 360) % 360;
+      
+      return [
+         <Sprite src={{
+            x: left,
+            y: top,
+            width: 162,
+            height: 69,
+            texture: "res/truck.png"
+         }} key={this.key}/>,
+         <Sprite src={{
+            x: left + 28 - 23/2,
+            y: top + 69 - 23/2,
+            width: 23,
+            height: 23,
+            texture: "res/wheel.png",
+            transform: `rotate(${wheelRotation}deg)`
+         }} key={this.key+"-wheel1"}/>,
+         <Sprite src={{
+            x: left + 138 - 23/2,
+            y: top + 69 - 23/2,
+            width: 23,
+            height: 23,
+            texture: "res/wheel.png",
+            transform: `rotate(${wheelRotation}deg)`
+         }} key={this.key+"-wheel2"}/>
+      ];
+   }
+
+   getX() {
+      return this.x;
+   }
+}
+
+class Crap extends Entity {
+   constructor() {
+      super();
+      this.x = camera[0] + 35;
+      this.y = roadLevel;
+      this.vel = [0, 0];
+      this.flinging = false;
+      this.active = true;
+   }
+
+   fling() {
+      this.vel = [ 10, -5 ];
+   }
+
+   update( time ) {
+      if( !this.active ) return;
+
+      if( this.flinging ) {
+         this.x += this.vel[0] * time;
+         this.y += this.vel[1] * time;
+         this.vel[1] += 1 * time;
+      }
+      console.log( this.x, this.y );
+      return (
+         <Sprite src={{
+            texture: 'res/crap.png',
+            x: this.x - camera[0] - 25,
+            y: this.y - camera[1] - 48,
+            width: 50,
+            height: 48
+         }}/>
+      )
+   }
 }
 
 //-----------------------------------------------------------------------------
@@ -202,11 +290,18 @@ class TrafficCar extends Entity {
    }
 }
 
-let mukundaActor = {
+const mukundaActor = {
    image: 'res/mug.png',
    mouth: 'res/mouth.png',
    mouthOrigin: [25, 55],
    mouthSize: [26, 21]
+}
+
+const chrisActor = {
+   image: 'res/chrisface.png',
+   mouth: 'res/chrismouth.png',
+   mouthOrigin: [36, 48],
+   mouthSize: [19, 14]
 }
 
 let theScript = [
@@ -255,16 +350,16 @@ class SpeechDisplay extends Entity {
       if( !this.active ) return;
       let elapsed = getTime() - this.startTime
       let progress = Math.min( elapsed / this.duration, 1.0 );
-      let textLength = Math.floor(progress * this.fullText.length);
-      let text = this.fullText.substring( 0, textLength );
-      let remainingText = this.fullText.substring( textLength );
+      let charPos = Math.floor(progress * this.fullText.length);
+      let text = this.fullText.substring( 0, charPos );
+      let remainingText = this.fullText.substring( charPos );
       let nextSpace = remainingText.search( " " );
       if( nextSpace === -1 ) {
          nextSpace = remainingText.length;
       }
       let textSuffix = "";
       if( nextSpace > 0 ) {
-         textSuffix = <span class='invisible'>{remainingText.substring( 0, nextSpace )}</span>;
+         textSuffix = <span className='invisible'>{remainingText.substring( 0, nextSpace ).replace(/>/g,"")}</span>;
       }
       text = text.replace( />/g, "" );
 
@@ -280,12 +375,17 @@ class SpeechDisplay extends Entity {
          this.finished = true;
       }
 
+      let currentCharacter = this.fullText.substring( charPos, charPos + 1 )
+      if( currentCharacter == ">" ) {
+         this.mouthOpen = false;
+      }
+
       this.innerKey = this.innerKey || makeKey();
       let scrollOffset = 0;
 
       let oldElement = document.getElementById( this.innerKey )
       if( !!oldElement ) {
-         console.log( oldElement, "Found!" );
+         
          let overflow = Math.max( oldElement.clientHeight - (76), 0 );
          if( overflow > 0 ) {
             scrollOffset = -overflow;
@@ -293,7 +393,7 @@ class SpeechDisplay extends Entity {
       }
 
       return (
-         <div className="Speechbox">
+         <div className="Speechbox" key={this.key}>
             <div className="frame">
                <img className="avatar" src={this.actor.image}/>
                <Sprite src={{
@@ -310,7 +410,7 @@ class SpeechDisplay extends Entity {
                      </div>
                   </div>
                </div>
-      </div>
+            </div>
          </div>);
    }
 
@@ -388,6 +488,7 @@ class Dude extends Entity {
             y: (this.y - 80) - camera[1] * 0.1,
             width: 49,
             height: 84,
+            z: 1,
             transform: "scale( 1 )",
             tx: -this.animations.frame * 49
          }} key={this.key}/> );
@@ -404,6 +505,77 @@ class Dude extends Entity {
    useCell( ) {
       this.makingACall = true;
    }
+}
+
+class Chris extends Entity {
+   
+   constructor() {
+      
+      super();
+      this.animations = new Animations({
+         
+         "run": {
+            startFrame: 0,
+            numFrames: 9,
+            fps: 10
+         }
+      });
+      this.moveSpeed = 130;
+      this.hidden = false;
+      this.key = makeKey();
+   }
+
+   spawn( x, y ) {
+      this.x = x;
+      this.y = y;
+   }
+
+   update( time ) {
+      if( this.moving ) {
+         if( this.x < this.destX ) {
+            this.flip = false;
+            this.x += this.moveSpeed * time;
+            if( this.x >= this.destX ) {
+               this.x = this.destX;
+               this.moving = false;
+            }
+         } else {
+            this.flip = true;
+            this.x -= this.moveSpeed * time;
+            if( this.x <= this.destX ) {
+               this.x = this.destX;
+               this.moving = false;
+               this.flip = false;
+            }
+         }
+         this.animations.set( "run" );
+         this.animations.update( time );
+      }
+
+
+      if( !this.hidden ) {
+         
+         return ( <Sprite src={{
+            texture: "res/chris.png",
+            x: (this.x - camera[0] - 64/2),
+            y: (this.y - 62) - camera[1],
+            width: 64,
+            height: 64,
+            z: 1,
+            transform: "scaleX( -1 )",
+            tx: -this.animations.frame * 64
+         }} key={this.key}/> );
+      }
+   }
+
+   moveTo( x ) {
+      this.destX = x;
+      if( Math.abs(this.x - this.destX) > 3 ) {
+         this.moving = true;
+      }
+   }
+
+
 }
 /*
 class Episode extends Entity {
@@ -436,6 +608,26 @@ class GameController extends Entity {
       this.scheduleTrafficCar();
 
       this.speech = new SpeechDisplay();
+
+      this.truck = new Truck();
+      this.crap = new Crap();
+
+      // Debug:
+      this.state = "start5";
+      this.dude.moveTo( 100 );
+      this.dude.useCell();
+      this.speech.start({
+         actor: mukundaActor,
+         text: "Ready!"
+      });
+
+      this.chris = new Chris();
+      this.chris.spawn( camera[0] + 200, roadLevel );
+      this.chris.moveTo( this.crap.x );
+      this.speech.start({
+         actor: chrisActor,
+         text: "Hello, my dear new programmer slave."
+      });
    }
 
    onTap() {
@@ -448,6 +640,15 @@ class GameController extends Entity {
 
    scheduleTrafficCar() {
       this.nextTrafficTime = getTime() + 1.5 + Math.random() * 6.0;
+   }
+
+   waitForDelay( updateTime, delay, slot = "delay1" ) {
+      this[slot] = (this[slot] || 0) + updateTime;
+      if( this[slot] > delay ) {
+         this[slot] = 0;
+         return true;
+      }
+      return false;
    }
 
    update( updateTime ) {
@@ -463,16 +664,14 @@ class GameController extends Entity {
             console.log( "Starting!" );
             this.dude.moveTo( 100 );
             this.state = "start2";
-            this.delay1 = 0;
          }
          break;
       case "start2":
          if( !this.dude.moving ) {
-            this.delay1 += updateTime;
-            if( this.delay1 >= 0.25 ) {
+            if( this.waitForDelay( updateTime, 0.25 )) {
                this.speech.start({
                   actor: mukundaActor,
-                  text: "Hey Internet! I'm Mukunda Johnson, and today I'm going to go and visit the HANDLED headquarters!"
+                  text: "Hey Internet! I'm Mukunda Johnson, and today I'm going to move to the HANDLED virtual headquarters!"
                });
                this.state = "start3";
             }
@@ -480,8 +679,30 @@ class GameController extends Entity {
          break;
       case "start3":
          if( this.speech.isDone() ) {
-            this.state = "start4";
+            if( this.waitForDelay( updateTime, 2.4 )) {
+               this.state = "start4";
+               this.speech.start({
+                  actor: mukundaActor,
+                  text: "My programmer made me kind of dumb, but that's okay;>>> you don't need a brain to use the intuitive Handled app! >>>>Let me try and figure it out."
+               });
+            }
+         }
+         break;
+      case "start4":
+         if( this.speech.isDone() && this.waitForDelay( updateTime, 2.4 ) ) {
+            this.state = "start5";
             this.dude.useCell();
+            this.speech.start({
+               actor: mukundaActor,
+               text: "I just pull out my phone and...>>> scan my stuff... >>>>>Oh,>> look,>> the machine learning read my mind, and I didn't even need to point my camera.>>> That's alarmingly painless."
+            });
+         }
+         break;
+      case "start5":
+         if( this.speech.isDone() && this.waitForDelay( updateTime, 3.0 ) ) {
+            this.speech.hide();
+            this.truck.rollUp();
+            this.state = "start6";
          }
       default:
          break;
@@ -510,7 +731,8 @@ let EntityRenderer = ( props ) => {
       let toAdd = e.update( elapsed );
       if( toAdd ) {
          if( Array.isArray(toAdd) ) {
-            elements.concat( toAdd );
+            
+            elements = elements.concat( toAdd );
          } else {
             elements.push( toAdd );
          }
@@ -531,7 +753,6 @@ let Speechbox = (props) => {
                </div>
             </div>
          </div>
-         
       </div>
    )
 }
