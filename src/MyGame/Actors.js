@@ -3,13 +3,16 @@ import chrisFace from './res/chrisface.png';
 import sethFace from './res/sethface.png';
 
 ///////////////////////////////////////////////////////////////////////////////
+// These are the avatars that show up in the chatbox window, also known as
+//  ACTORS.
+// Mouth support was removed to make the show not look too stupid.
 
 //-----------------------------------------------------------------------------
 const mukunda = {
-   image: mukundaFace,
-   mouth: 'res/mouth.png',
-   mouthOrigin: [25, 55],
-   mouthSize: [26, 21]
+   image: mukundaFace,      // Background image file
+   mouth: 'res/mouth.png',  // Mouth/jaw overlay
+   mouthOrigin: [25, 55],   // Where the overlay is
+   mouthSize: [26, 21]      // Size of the overlay texture
 }
 
 //-----------------------------------------------------------------------------

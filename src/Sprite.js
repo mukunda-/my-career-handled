@@ -1,4 +1,5 @@
 import React from 'react';
+import './Base.css';
 
 //-----------------------------------------------------------------------------
 // A simple texture component.

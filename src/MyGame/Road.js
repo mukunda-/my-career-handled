@@ -2,7 +2,7 @@ import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
 
-import roadTexture from '../res/road.png';
+import roadTexture from './res/road.png';
 ///////////////////////////////////////////////////////////////////////////////
 const textureWidth = 400;
 
@@ -16,11 +16,10 @@ class Road extends Engine.Entity {
 
    render() {
       const camera   = Engine.getCamera();
-      console.log( camera );
       const [width,] = Engine.getDisplaySize();
 
       return (
-         <Sprite 
+         <Sprite
             src={{
                texture: roadTexture,
                x: (-camera[0] % textureWidth),

@@ -6,10 +6,6 @@ import './SpeechDisplay.css';
 ///////////////////////////////////////////////////////////////////////////////
 
 class SpeechDisplay extends Engine.Entity {
-   constructor() {
-      super();
-   }
-
    start( options ) {
       this.active    = true;
       this.fullText  = options.text || "MISSING TEXT";
@@ -71,7 +67,7 @@ class SpeechDisplay extends Engine.Entity {
       }
 
       let currentCharacter = this.fullText.substring( charPos, charPos + 1 )
-      if( currentCharacter == ">" || this.nomouth ) {
+      if( currentCharacter === ">" || this.nomouth ) {
          this.mouthOpen = 0;
       }
 
@@ -121,7 +117,7 @@ class SpeechDisplay extends Engine.Entity {
          </div>
       );
 
-      /*
+      /* the mouth stuff was too goofy
       <Sprite src={{
                texture: this.actor.mouth,
                x: (8+this.actor.mouthOrigin[0]),

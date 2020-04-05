@@ -1,3 +1,7 @@
+@font-face {
+  font-family: "Pokemon";
+  src: url(./fonts/Pokemon.woff) format('woff');
+}
 
 .Speechbox {
   position: absolute;
@@ -45,4 +49,9 @@
   padding: 8px;
   position: absolute;
   top: -12px;
+}
+
+/* Invisible letters are  */
+.invisible {
+  color: transparent;
 }

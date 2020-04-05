@@ -1,0 +1,37 @@
+body {
+  background-color: black;
+  margin: 0;
+
+  /* Make all the graphics look especially terrible for aesthetic effect. */
+  image-rendering: pixelated;
+
+  /* Hide scrollbars */
+  overflow: hidden;
+}
+
+/* Viewport sits centered in the body. We use JavaScript magic to do that,
+    since it's all sorts of a headache otherwise if you're using transforms. */
+.Viewport {
+  margin: 0px auto;
+  transform-origin: top left;
+  overflow: hidden;
+  z-index: -15;
+}
+
+/* The Scene is the container for all of the game elements, and includes the
+    backdrop color. */
+.Scene {
+  background-color: #c4eee0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: -14;
+}
+
+/* Sprites get a lot of junk added on top through inline styles. */
+.Sprite {
+  position: absolute;
+}
+

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import './App.css';
+import './Base.css';
 import Scene from './Scene';
 import GameHost from './Engine';
 import MyGame from './MyGame/MyGame';

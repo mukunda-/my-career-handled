@@ -32,8 +32,8 @@ function afterDelay( time, func ) {
 
 //-----------------------------------------------------------------------------
 // For `await timeout( seconds );`
-const timeout = seconds => new Promise( res => setTimeout( res, 
-                                       (seconds*1000)/Engine.getTimeScale()) );
+//const timeout = seconds => new Promise( res => setTimeout( res, 
+//                                       (seconds*1000)/Engine.getTimeScale()) );
 
 //-----------------------------------------------------------------------------
 // The big game state and all of its glorious script.
@@ -471,7 +471,7 @@ class State extends Engine.Entity {
       case "to space 3":
       case "to space 4":
          
-
+         break;
       default:
          break;
       }

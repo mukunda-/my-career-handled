@@ -17,7 +17,7 @@ class TrafficCar extends Engine.Entity {
    update( time ) {
       this.x -= time * this.speed;
 
-      const [sx, sy] = Engine.translate( this.x, this.y );
+      const [sx,] = Engine.translate( this.x, this.y );
       if( sx < -200 ) {
          // It went offscreen.
          this.obliterate();

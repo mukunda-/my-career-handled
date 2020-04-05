@@ -71,6 +71,17 @@ function getTimeScale() {
 }
 
 //-----------------------------------------------------------------------------
+// Execute func after x seconds, BUT these seconds are scaled by the current
+//  timescale.
+//
+// TODO make it so that they respect variations in the time, not just a
+//  constant when the timer stars. It should work by saving the expected
+//  trigger time and checking each frame (in a sorted list).
+function after( seconds, func ) {
+   setTimeout( func, seconds / timeScale );
+}
+
+//-----------------------------------------------------------------------------
 // The camera position for calculating sprite positions in the world.
 function getCamera() {
    return [camera[0], camera[1]];
@@ -78,6 +89,12 @@ function getCamera() {
 
 function setCamera( x, y ) {
    camera = [x, y];
+}
+
+//-----------------------------------------------------------------------------
+// Mainly for diagnostic purposes.
+function getEntityList() {
+   return entitiesList;
 }
 
 //-----------------------------------------------------------------------------
@@ -172,5 +189,5 @@ class Entity {
 export default {
    reset, makeKey, getTime, updateTime, getCamera, setCamera, Entity,
    getDisplaySize, getRenderOptions, update, render, getStartTime, translate,
-   setBackdrop, setTimeScale, getTimeScale
+   setBackdrop, setTimeScale, getTimeScale, getEntityList, after
 };

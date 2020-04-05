@@ -5,24 +5,30 @@ import Sprite from '../Sprite';
 import crapTexture from './res/crap.png';
 ///////////////////////////////////////////////////////////////////////////////
 
+//-----------------------------------------------------------------------------
+// A box full of my crap; supports a function to fling it into the truck.
 class Crap extends Engine.Entity {
+   //--------------------------------------------------------------------------
    constructor( x, y ) {
       super();
-      this.x = x;
-      this.y = y;
-      this.vel = [0, 0];
+      this.x        = x;
+      this.y        = y;
+      this.vel      = [0, 0];
       this.flinging = false;
-      this.active = true;
+      this.active   = true;
    }
 
+   //--------------------------------------------------------------------------
+   // Fling the box to the right and make it despawn.
    fling() {
       this.vel = [ 500, -220 ];
-      setTimeout(() => {
+      Engine.after( 0.3, () => {
          this.active = false;
-      }, 300 );
+      });
       this.flinging = true;
    }
 
+   //--------------------------------------------------------------------------
    update( time ) {
       if( !this.active ) return;
 
@@ -34,6 +40,7 @@ class Crap extends Engine.Entity {
       }
    }
 
+   //--------------------------------------------------------------------------
    render() {
       if( !this.active ) return;
       const [x, y] = Engine.translate( this.x - 25, this.y - 48 );

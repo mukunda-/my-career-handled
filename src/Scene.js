@@ -1,6 +1,11 @@
 import React from 'react';
-import './App.css';
+import './Base.css';
+///////////////////////////////////////////////////////////////////////////////
 
+//-----------------------------------------------------------------------------
+// The Scene is a basic container that sits in the viewport and holds all of
+//  the game content. Currently the only property it has by itself is a color
+//  backdrop.
 let Scene = (props) => {
    let style = {}
 
@@ -13,4 +18,5 @@ let Scene = (props) => {
    return <div className="Scene" style={style}>{props.children}</div>
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default Scene;
