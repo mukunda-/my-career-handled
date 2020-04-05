@@ -82,7 +82,6 @@ function renderLoop() {
    let components   = GameHost.render();
    let sceneOptions = GameHost.getRenderOptions();
    let displaySize  = GameHost.getDisplaySize();
-   console.log( sceneOptions );
    
    ReactDOM.render(
       <React.StrictMode>

@@ -2,13 +2,18 @@ import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
 
+import './Handled.css';
+
+import handledTexture from './res/handled.png';
+///////////////////////////////////////////////////////////////////////////////
+
 class Handled extends Engine.Entity {
    constructor() {
       super();
       this.time = Engine.getTime();
    }
 
-   update() {
+   render() {
       let opacity = Math.min( Engine.getTime() - this.time, 1 );
       let opacity2 = Math.min( (Engine.getTime() - this.time - 2) / 2, 1 );
 
@@ -20,7 +25,7 @@ class Handled extends Engine.Entity {
             y: displaySize[1] / 2 - 150/2,
             width: 150,
             height: 150,
-            texture: "res/bigh.png",
+            texture: handledTexture,
             opacity: opacity
          }} key={this.key}/>
       ];
@@ -38,4 +43,5 @@ class Handled extends Engine.Entity {
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default Handled;

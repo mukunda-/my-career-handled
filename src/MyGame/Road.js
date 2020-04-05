@@ -16,9 +16,9 @@ class Road extends Engine.Entity {
 
    render() {
       const camera   = Engine.getCamera();
+      console.log( camera );
       const [width,] = Engine.getDisplaySize();
 
-      console.log( roadTexture );
       return (
          <Sprite 
             src={{

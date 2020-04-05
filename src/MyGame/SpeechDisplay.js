@@ -2,6 +2,9 @@ import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
 
+import './SpeechDisplay.css';
+///////////////////////////////////////////////////////////////////////////////
+
 class SpeechDisplay extends Engine.Entity {
    constructor() {
       super();
@@ -33,7 +36,7 @@ class SpeechDisplay extends Engine.Entity {
    update( updateTime ) {
       if( !this.active ) return;
       let elapsed = Engine.getTime() - this.startTime
-      let progress = Math.min( elapsed / (this.duration/5), 1.0 );
+      let progress = Math.min( elapsed / (this.duration), 1.0 );
       
       let charPos = Math.floor(progress * this.fullText.length);
       let text = this.fullText.substring( 0, charPos );
@@ -44,7 +47,10 @@ class SpeechDisplay extends Engine.Entity {
       }
       let textSuffix = "";
       if( nextSpace > 0 ) {
-         textSuffix = <span className='invisible'>{remainingText.substring( 0, nextSpace ).replace(/>/g,"")}</span>;
+         textSuffix =
+                  <span className='invisible'>
+                     {remainingText.substring( 0, nextSpace ).replace(/>/g,"")}
+                  </span>;
       }
       text = text.replace( />/g, "" );
 
@@ -69,43 +75,19 @@ class SpeechDisplay extends Engine.Entity {
          this.mouthOpen = 0;
       }
 
-      let scrollOffset = 0;
+      this.textScrollOffset = 0;
+      this.text = text;
+      this.textSuffix = textSuffix;
 
       let oldElement = document.getElementById( this.key + "-inner" )
       if( !!oldElement ) {
          
          let overflow = Math.max( oldElement.clientHeight - (76), 0 );
          if( overflow > 0 ) {
-            scrollOffset = -overflow;
+            this.textScrollOffset = -overflow;
          }
       }
 
-      return (
-         <div className="Speechbox" key={this.key}>
-            
-            <Sprite src={{
-               texture: this.actor.image,
-               x: 8,
-               y: 10,
-               width: 90,
-               height: 76
-            }}/>
-            <Sprite src={{
-               texture: this.actor.mouth,
-               x: (8+this.actor.mouthOrigin[0]),
-               y: (10+this.actor.mouthOrigin[1]) + this.mouthOpen,
-               width: this.actor.mouthSize[0],
-               height: this.actor.mouthSize[1]
-            }}/>
-            <div className="frame">
-               
-               <div className="text">
-                  <div className="inner" id={this.key + "-inner"} style={{top: scrollOffset + "px"}}>
-                     {text}{textSuffix}
-                  </div>
-               </div>
-            </div>
-         </div>);
    }
 
    hide() {
@@ -114,6 +96,40 @@ class SpeechDisplay extends Engine.Entity {
 
    isDone() {
       return this.finished;
+   }
+
+   render() {
+      if( !this.active ) return;
+
+      return (
+         <div className="Speechbox" key={this.key}>
+            <Sprite src={{
+               texture: this.actor.image,
+               x: 8,
+               y: 10,
+               width: 90,
+               height: 76
+            }}/>
+            
+            <div className="frame">
+               <div className="text">
+                  <div className="inner" id={this.key + "-inner"} style={{top: this.textScrollOffset + "px"}}>
+                     {this.text}{this.textSuffix}
+                  </div>
+               </div>
+            </div>
+         </div>
+      );
+
+      /*
+      <Sprite src={{
+               texture: this.actor.mouth,
+               x: (8+this.actor.mouthOrigin[0]),
+               y: (10+this.actor.mouthOrigin[1]) + this.mouthOpen,
+               width: this.actor.mouthSize[0],
+               height: this.actor.mouthSize[1]
+            }}/>
+            */
    }
 }
 

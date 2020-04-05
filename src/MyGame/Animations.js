@@ -1,6 +1,6 @@
 
-
 //-----------------------------------------------------------------------------
+// A helper class to manage simple frame-based animations.
 class Animations {
    constructor( animationList ) {
       this.animationList = animationList;
@@ -8,7 +8,7 @@ class Animations {
       this.current = "";
    }
 
-   set( name ) {
+   set( name ) { 
       if( this.current === name ) return;
       this.current = name;
       this.frame = this.animationList[name].startFrame;
@@ -28,3 +28,6 @@ class Animations {
       }
    }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+export default Animations;

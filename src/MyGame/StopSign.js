@@ -2,6 +2,9 @@ import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
 
+import stopTexture from './res/time2stop.png';
+///////////////////////////////////////////////////////////////////////////////
+
 class StopSign extends Engine.Entity {
    constructor( x, y ) {
       super();
@@ -17,7 +20,7 @@ class StopSign extends Engine.Entity {
                y: y,
                width: 32,
                height: 40,
-               texture: "res/time2stop.png"
+               texture: stopTexture
             }}
             key={this.key}
          />
@@ -25,4 +28,5 @@ class StopSign extends Engine.Entity {
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default StopSign;

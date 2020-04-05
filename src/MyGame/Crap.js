@@ -8,8 +8,8 @@ import crapTexture from './res/crap.png';
 class Crap extends Engine.Entity {
    constructor( x, y ) {
       super();
-      this.x = x; //camera[0] + 35;
-      this.y = y; //roadLevel;
+      this.x = x;
+      this.y = y;
       this.vel = [0, 0];
       this.flinging = false;
       this.active = true;
@@ -35,6 +35,7 @@ class Crap extends Engine.Entity {
    }
 
    render() {
+      if( !this.active ) return;
       const [x, y] = Engine.translate( this.x - 25, this.y - 48 );
       return (
          <Sprite src={{

@@ -26,7 +26,7 @@ function reset() {
    nextNewKeyIndex   = 1;
    lastTimePollMs    = 0;
    lastUpdateTime    = 0;
-   timeScale         = 1.0;
+   timeScale         = 4.0;
    backdrop          = [ 32, 32, 32 ];
 }
 
@@ -55,8 +55,19 @@ function getStartTime() {
 // The current timestamp is updated and cached each frame.
 function updateTime() {
    // Only a maximum of real 100ms can pass in a single frame.
-   let elapsed = Math.min( new Date().getTime() - lastTimePollMs, 100 );
+   let ms = new Date().getTime();
+   ms = new Date().getTime()
+   let elapsed = Math.min( ms - lastTimePollMs, 100 );
+   lastTimePollMs = ms;
    currentTimeMs += elapsed * timeScale;
+}
+
+function setTimeScale( scale ) {
+   timeScale = scale;
+}
+
+function getTimeScale() {
+   return timeScale;
 }
 
 //-----------------------------------------------------------------------------
@@ -72,7 +83,7 @@ function setCamera( x, y ) {
 //-----------------------------------------------------------------------------
 // Returns [x, y] translated by the current camera position.
 function translate( x, y, scale = 1.0 ) {
-   return [x - camera[0], y - camera[1]];
+   return [x - camera[0] * scale, y - camera[1] * scale];
 }
 
 //-----------------------------------------------------------------------------
@@ -159,6 +170,7 @@ class Entity {
 
 ///////////////////////////////////////////////////////////////////////////////
 export default {
-   reset, makeKey, getTime, updateTime, getCamera, Entity, getDisplaySize,
-   getRenderOptions, update, render, getStartTime, translate
+   reset, makeKey, getTime, updateTime, getCamera, setCamera, Entity,
+   getDisplaySize, getRenderOptions, update, render, getStartTime, translate,
+   setBackdrop, setTimeScale, getTimeScale
 };

@@ -2,10 +2,16 @@ import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
 
+import spaceStationTxture from './res/spacestation14.png';
+///////////////////////////////////////////////////////////////////////////////
+
 class SpaceStation extends Engine.Entity {
    constructor( x, y ) {
       super();
-      [this.x, this.y] = [x, y];
+      this.x = x;
+      this.y = y;
+      //[this.x, this.y] = [x, y];
+
       //this.x = camera[0] + displaySize[0] + 1000;
       //this.y = camera[1];
    }
@@ -17,11 +23,12 @@ class SpaceStation extends Engine.Entity {
             y: y,
             width: 867,
             height: 280,
-            texture: "res/spacestation.png",
+            texture: spaceStationTxture,
             z: -2
          }} key={this.key}/>
       );
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default SpaceStation;

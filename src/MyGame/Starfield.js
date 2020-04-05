@@ -2,6 +2,9 @@ import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
 
+import starfieldTexture from './res/stars.png';
+///////////////////////////////////////////////////////////////////////////////
+
 class Starfield extends Engine.Entity {
    
    constructor() {
@@ -13,7 +16,7 @@ class Starfield extends Engine.Entity {
       this.opacity = opacity;
    }
 
-   update() {
+   render() {
       if( this.opacity === 0 ) {
          return;
       }
@@ -27,7 +30,7 @@ class Starfield extends Engine.Entity {
             y: 0,
             width: displaySize[0],
             height: displaySize[1],
-            texture: "res/stars.png",
+            texture: starfieldTexture,
             tx: -camera[0] * 0.1,
             ty: -camera[1] * 0.1,
             opacity: this.opacity,
@@ -37,4 +40,5 @@ class Starfield extends Engine.Entity {
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default Starfield;

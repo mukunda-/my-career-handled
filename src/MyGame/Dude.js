@@ -4,6 +4,7 @@ import React from 'react';
 import Sprite from '../Sprite';
 
 import texture from './res/mewithglassestomakemeappearmoregifted.png';
+///////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------
 class Dude extends Engine.Entity {
@@ -106,4 +107,5 @@ class Dude extends Engine.Entity {
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default Dude;

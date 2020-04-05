@@ -27,12 +27,13 @@ const roadLevel = 234;
 // I really hate putting the delay time AFTER the function definition.
 // This accepts seconds, too.
 function afterDelay( time, func ) {
-   return setTimeout( func, time * 1000 );
+   return setTimeout( func, (time * 1000) / Engine.getTimeScale() );
 }
 
 //-----------------------------------------------------------------------------
 // For `await timeout( seconds );`
-const timeout = seconds => new Promise( res => setTimeout(res, seconds*1000) );
+const timeout = seconds => new Promise( res => setTimeout( res, 
+                                       (seconds*1000)/Engine.getTimeScale()) );
 
 //-----------------------------------------------------------------------------
 // The big game state and all of its glorious script.
@@ -42,7 +43,7 @@ class State extends Engine.Entity {
       this.scene = "start";
       this.lastTime = Engine.getTime();
 
-      this.road = new Road();
+      this.road = new Road( roadLevel );
       this.clouds = new Clouds();
 
       this.dude = new Dude( -300, roadLevel );
@@ -54,7 +55,7 @@ class State extends Engine.Entity {
 
       this.speech = new SpeechDisplay();
 
-      this.truck = new Truck();
+      this.truck = new Truck( -100, roadLevel );
       this.crap = new Crap( 35, roadLevel );
       this.chris = new Chris();
       this.starfield = new Starfield();
@@ -77,10 +78,10 @@ class State extends Engine.Entity {
       });
 */
 //this.truck.x = 50;
-this.truck.gogogo();
-this.truck.fly();
-this.followTruck =true;
-      this.scene = "to space 5";
+//this.truck.gogogo();
+//this.truck.fly();
+//this.followTruck =true;
+//      this.scene = "to space 5";
       this.onSceneStart( this.scene );
       
    }
@@ -330,7 +331,7 @@ this.followTruck =true;
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Oh yeah, the Handled office is located in the cloud!",
+               text: "Oh right, the Handled office is located in the cloud!",
                callback: () => this.setScene( "to space" )
             });
          });
@@ -339,7 +340,7 @@ this.followTruck =true;
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Or... outer space...",
+               text: "Or... outer space...?",
                callback: () => {
                   this.setScene( "to space 2" )
                }
@@ -351,7 +352,7 @@ this.followTruck =true;
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Just so you're aware, Chris, as I am a proactive communicator - I didn't pack any Oxygen.>>>>>>>>>> But I'm willing to be flexible to work at your superb company.",
+               text: "Just so you're aware, Chris, as I am a proactive communicator - I didn't pack any Oxygen.>>>>>>>>>> But I'm willing to be flexible to be a part of your superb company.",
                callback: () => this.setScene( "to space 3" )
             });
          });
@@ -380,9 +381,15 @@ this.followTruck =true;
             this.speech.hide();
          });
          afterDelay( 8.0, ()=> {
-            this.spacestation = new SpaceStation();
-            this.seth = new Seth( this.spacestation.x + 25, this.spacestation.y - 45 );
-            this.truck.flyTo( this.spacestation.x-150, this.spacestation.y );
+            const camera = Engine.getCamera();
+            const displaySize = Engine.getDisplaySize();
+            this.spacestation = new SpaceStation(
+                                          camera[0] + displaySize[0] + 1000,
+                                          camera[1] );
+            this.seth = new Seth( this.spacestation.x + 25,
+                                  this.spacestation.y - 45 );
+            this.truck.flyTo( this.spacestation.x - 150,
+                              this.spacestation.y        );
             this.setScene( "to station" );
          });
          break;
@@ -390,7 +397,9 @@ this.followTruck =true;
          afterDelay( 3.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "...what's that voice...?>>>>>>>>>>>> ...could it be...?>>>>>>>>>> Mister Waite?>>>>>>>>>>>> ...addressing the universe with an inspirational speech...?",
+               text: "...what's that voice...?>>>>>>>>>>>> ...could it be...?"
+                    +">>>>>>>>>> Mister Waite?>>>>>>>>>>>> "
+                    +"...addressing the universe with an inspirational speech...?",
                callback: () => this.setScene( "station 2" )
             });
          });
@@ -399,7 +408,7 @@ this.followTruck =true;
          afterDelay( 3.0, () => {
             this.speech.start({
                actor: Actors.seth,
-               text: "...And my message is clear.",
+               text: "...And my message is clear...",
                nomouth: true, // honestly scared bc i don't know how easygoing seth is. don't give him a goofy mouth
                callback: () => this.setScene( "station 3" )
             });

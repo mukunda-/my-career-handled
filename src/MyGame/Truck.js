@@ -2,6 +2,9 @@
 import Engine from "../Engine";
 import React from 'react';
 import Sprite from '../Sprite';
+
+import truckTexture from './res/handled_truck.png';
+import wheelTexture from './res/wheel.png';
 ///////////////////////////////////////////////////////////////////////////////
 
 class Truck extends Engine.Entity {
@@ -83,14 +86,14 @@ class Truck extends Engine.Entity {
             y: top + ((this.x % 50) > 40 ? 1 : 0),
             width: 162,
             height: 69,
-            texture: "res/truck.png"
+            texture: truckTexture
          }} key={this.key}/>,
          <Sprite src={{
             x: left + 28 - 23/2,
             y: top + 69 - 23/2,
             width: 23,
             height: 23,
-            texture: "res/wheel.png",
+            texture: wheelTexture,
             transform: `rotate(${wheelRotation}deg)`
          }} key={this.key+"-wheel1"}/>,
          <Sprite src={{
@@ -98,7 +101,7 @@ class Truck extends Engine.Entity {
             y: top + 69 - 23/2,
             width: 23,
             height: 23,
-            texture: "res/wheel.png",
+            texture: wheelTexture,
             transform: `rotate(${wheelRotation}deg)`
          }} key={this.key+"-wheel2"}/>
       ];

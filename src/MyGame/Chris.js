@@ -3,6 +3,9 @@ import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
 
+import chrisTexture from './res/chris.png';
+///////////////////////////////////////////////////////////////////////////////
+
 class Chris extends Engine.Entity {
    
    constructor() {
@@ -78,7 +81,7 @@ class Chris extends Engine.Entity {
       const [x, y] = Engine.translate( this.x - 64/2, this.y - 62 );
       return (
          <Sprite src={{
-               texture: "res/chris.png",
+               texture: chrisTexture,
                x: x,
                y: y,
                width: 64,
@@ -86,11 +89,12 @@ class Chris extends Engine.Entity {
                z: 1,
                transform: this.flip ? "scaleX( -1 )" : "",
                tx: -this.animations.frame * 64
-            }} 
+            }}
             key={this.key}
          />
       );
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default Chris;
