@@ -1,6 +1,7 @@
+import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
-import Engine from '../Engine';
+
 import roadTexture from '../res/road.png';
 ///////////////////////////////////////////////////////////////////////////////
 const textureWidth = 400;

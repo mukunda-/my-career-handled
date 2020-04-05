@@ -9,11 +9,11 @@ let startTime;
 let entitiesList;
 let camera;
 let currentTimeMs;
-let backgroundFade;
 let nextNewKeyIndex;
 let lastTimePollMs;
 let lastUpdateTime;
 let timeScale;
+let backdrop;
 ///////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------
@@ -23,11 +23,11 @@ function reset() {
    entitiesList      = [];
    camera            = [0, 0];
    currentTimeMs     = 0;
-   backgroundFade    = 0;
    nextNewKeyIndex   = 1;
    lastTimePollMs    = 0;
    lastUpdateTime    = 0;
    timeScale         = 1.0;
+   backdrop          = [ 32, 32, 32 ];
 }
 
 //-----------------------------------------------------------------------------
@@ -65,6 +65,16 @@ function getCamera() {
    return [camera[0], camera[1]];
 }
 
+function setCamera( x, y ) {
+   camera = [x, y];
+}
+
+//-----------------------------------------------------------------------------
+// Returns [x, y] translated by the current camera position.
+function translate( x, y, scale = 1.0 ) {
+   return [x - camera[0], y - camera[1]];
+}
+
 //-----------------------------------------------------------------------------
 // Returns [width, height], the fixed dimensions of the game display. This is
 //                                         not affected by the viewport scale.
@@ -76,11 +86,11 @@ function getDisplaySize() {
 // Some generic rendering options meant to be passed to whatever frontend
 //                                              render-controlling object.
 function getRenderOptions() {
-   let backdrop = [0xc4, 0xee, 0xe0];
-   for( let i = 0; i < backdrop.length; i++ )
-      backdrop[i] *= 1 - backgroundFade;
-
    return { backdrop };
+}
+
+function setBackdrop( newBackdrop ) {
+   backdrop = newBackdrop;
 }
 
 //-----------------------------------------------------------------------------
@@ -149,6 +159,6 @@ class Entity {
 
 ///////////////////////////////////////////////////////////////////////////////
 export default {
-   reset, makeKey, getTime, updateTime, getCamera, Entity, 
-   getDisplaySize, getRenderOptions, update, render, getStartTime
+   reset, makeKey, getTime, updateTime, getCamera, Entity, getDisplaySize,
+   getRenderOptions, update, render, getStartTime, translate
 };
