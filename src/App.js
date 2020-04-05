@@ -336,6 +336,7 @@ class TrafficCar extends Entity {
    }
 }
 
+//-----------------------------------------------------------------------------
 const mukundaActor = {
    image: 'res/mug.png',
    mouth: 'res/mouth.png',
@@ -343,6 +344,7 @@ const mukundaActor = {
    mouthSize: [26, 21]
 }
 
+//-----------------------------------------------------------------------------
 const chrisActor = {
    image: 'res/chrisface.png',
    mouth: 'res/chrismouth.png',
@@ -350,6 +352,15 @@ const chrisActor = {
    mouthSize: [19, 14]
 }
 
+//-----------------------------------------------------------------------------
+const sethActor = {
+   image: 'res/sethface.png',
+   mouth: 'res/sethface.png',
+   mouthOrigin: [0, 0],
+   mouthSize: [0, 0]
+}
+
+//-----------------------------------------------------------------------------
 let theScript = [
    "wait_for_click",
    {
@@ -397,7 +408,7 @@ class SpeechDisplay extends Entity {
    update( updateTime ) {
       if( !this.active ) return;
       let elapsed = getTime() - this.startTime
-      let progress = Math.min( elapsed / (this.duration), 1.0 );
+      let progress = Math.min( elapsed / (this.duration/5), 1.0 );
       
       let charPos = Math.floor(progress * this.fullText.length);
       let text = this.fullText.substring( 0, charPos );
@@ -730,6 +741,28 @@ class SpaceStation extends Entity {
    }
 }
 
+class Seth extends Entity {
+   constructor( x, y ) {
+      super();
+      this.x = x;
+      this.y = y;
+   }
+
+   update( timeElapsed ) {
+      let t = Math.floor((getTime() * 2) % 2);
+      return (
+         <Sprite src={{
+            x: this.x - camera[0] - 49/2,
+            y: this.y - camera[1] - 64,
+            width: 49,
+            height: 64,
+            texture: "res/smallseth.png",
+            tx: t * 49,
+         }} key={this.key}/>
+      )
+   }
+}
+
 class Starfield extends Entity {
    
    constructor() {
@@ -762,6 +795,40 @@ class Starfield extends Entity {
    }
 }
 
+class Handled extends Entity {
+   constructor() {
+      super();
+      this.time = getTime();
+   }
+
+   update() {
+      let opacity = Math.min( getTime() - this.time, 1 );
+      let opacity2 = Math.min( (getTime() - this.time - 2) / 2, 1 );
+
+      let output = [
+         <Sprite src={{
+            x: displaySize[0] / 2 - 150/2,
+            y: displaySize[1] / 2 - 150/2,
+            width: 150,
+            height: 150,
+            texture: "res/bigh.png",
+            opacity: opacity
+         }} key={this.key}/>
+      ];
+
+      if( opacity2 > 0 ) {
+         output.push(
+            <div className="hireme" key={this.key + "-tagline"}
+                 style={{opacity:opacity2}}>
+               I want to be a part of your change.
+            </div>
+         );
+      }
+
+      return output;
+   }
+}
+
 // I really hate putting the delay time AFTER the function definition.
 // This accepts seconds, too.
 function afterDelay( time, func ) {
@@ -776,7 +843,7 @@ class GameController extends Entity {
       this.lastTime = getTime();
 
       this.road = new Road();
-      this.clouds = new Clouds();
+     // this.clouds = new Clouds();
 
       this.dude = new Dude();
       this.dude.x = camera[0] - 100;
@@ -810,10 +877,10 @@ class GameController extends Entity {
       });
 */
 //this.truck.x = 50;
-//this.truck.gogogo();
-//this.truck.fly();
-//this.followTruck =true;
-    //  this.scene = "flying";
+this.truck.gogogo();
+this.truck.fly();
+this.followTruck =true;
+      this.scene = "to space 5";
       this.onSceneStart( this.scene );
       
    }
@@ -1112,9 +1179,59 @@ class GameController extends Entity {
          });
          afterDelay( 8.0, ()=> {
             this.spacestation = new SpaceStation();
+            this.seth = new Seth( this.spacestation.x + 25, this.spacestation.y - 45 );
             this.truck.flyTo( this.spacestation.x-150, this.spacestation.y );
             this.setScene( "to station" );
          });
+         break;
+      case "to station":
+         afterDelay( 3.0, () => {
+            this.speech.start({
+               actor: mukundaActor,
+               text: "...what's that voice...?>>>>>>>>>>>> ...could it be...?>>>>>>>>>> Mister Waite?>>>>>>>>>>>> ...addressing the universe with an inspirational speech...?",
+               callback: () => this.setScene( "station 2" )
+            });
+         });
+         break;
+      case "station 2":
+         afterDelay( 3.0, () => {
+            this.speech.start({
+               actor: sethActor,
+               text: "...And my message is clear.",
+               nomouth: true, // honestly scared bc i don't know how easygoing seth is. don't give him a goofy mouth
+               callback: () => this.setScene( "station 3" )
+            });
+         });
+         break;
+      case "station 3":
+         afterDelay( 3.0, () => {
+            this.speech.start({
+               actor: sethActor,
+               text: "Change>>>>>>>> or be compelled to be changed!",
+               nomouth: true,
+               callback: () => this.setScene( "station 4" )
+            });
+         });
+         break;
+      case "station 4":
+         afterDelay( 3.0, () => {
+            this.speech.start({
+               actor: mukundaActor,
+               text: "What a legend...>>>>>>>>>> I feel the life returning to me...",
+               callback: () => this.setScene( "station 5" )
+            });
+         });
+         break;
+      case "station 5":
+         afterDelay( 3.0, () => {
+            this.speech.hide();
+            this.followTruck = false;
+            this.cameraFloat = true;
+         });
+         afterDelay( 10.0, () => {
+            this.handled = new Handled();
+         });
+         break;
       default:
          break;
       }
@@ -1177,6 +1294,10 @@ class GameController extends Entity {
          if( this.truck.flying ) {
             camera[1] = this.truck.y - roadLevel;
          }
+      }
+
+      if( this.cameraFloat ) {
+         camera[1] -= updateTime * 25;
       }
 
       if( camera[1] < -2000 ) {
