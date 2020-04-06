@@ -82,8 +82,7 @@ class Chris extends Engine.Entity {
       return (
          <Sprite src={{
                texture: chrisTexture,
-               x: x,
-               y: y,
+               x, y,
                width: 64,
                height: 64,
                z: 1,

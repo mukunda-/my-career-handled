@@ -14,6 +14,7 @@ let lastTimePollMs;
 let lastUpdateTime;
 let timeScale;
 let backdrop;
+let tapCallbacks;
 ///////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------
@@ -21,12 +22,13 @@ let backdrop;
 function reset() {
    startTime         = new Date().getTime();
    entitiesList      = [];
+   tapCallbacks      = [];
    camera            = [0, 0];
    currentTimeMs     = 0;
    nextNewKeyIndex   = 1;
    lastTimePollMs    = 0;
    lastUpdateTime    = 0;
-   timeScale         = 4.0;
+   timeScale         = 1.0;
    backdrop          = [ 32, 32, 32 ];
 }
 
@@ -62,6 +64,10 @@ function updateTime() {
    currentTimeMs += elapsed * timeScale;
 }
 
+function forceTime( amount ) {
+   lastTimePollMs -= amount * 1000;
+}
+
 function setTimeScale( scale ) {
    timeScale = scale;
 }
@@ -78,7 +84,7 @@ function getTimeScale() {
 //  constant when the timer stars. It should work by saving the expected
 //  trigger time and checking each frame (in a sorted list).
 function after( seconds, func ) {
-   setTimeout( func, seconds / timeScale );
+   setTimeout( func, seconds*1000 / timeScale );
 }
 
 //-----------------------------------------------------------------------------
@@ -89,6 +95,21 @@ function getCamera() {
 
 function setCamera( x, y ) {
    camera = [x, y];
+}
+
+function registerForTaps( callback ) {
+   tapCallbacks.push( callback );
+}
+
+function unregisterForTaps( callback ) {
+   const index = tapCallbacks.indexOf( callback );
+   tapCallbacks.splice( index, 1 );
+}
+
+function tap( x, y ) {
+   tapCallbacks.forEach( f => {
+      f( x, y );
+   });
 }
 
 //-----------------------------------------------------------------------------
@@ -189,5 +210,6 @@ class Entity {
 export default {
    reset, makeKey, getTime, updateTime, getCamera, setCamera, Entity,
    getDisplaySize, getRenderOptions, update, render, getStartTime, translate,
-   setBackdrop, setTimeScale, getTimeScale, getEntityList, after
+   setBackdrop, setTimeScale, getTimeScale, getEntityList, after, forceTime,
+   registerForTaps, unregisterForTaps, tap
 };

@@ -3,5 +3,5 @@ fields.
 
 Most assets are copyrighted by their respective authors and used without
 permission. Activities portrayed within do not accurately reflect the
-wonderful people behind the faces, except for Mister Waite - his portrayal
+wonderful people behind the faces, except for Mr. Waite - his portrayal
 is semi-accurate.

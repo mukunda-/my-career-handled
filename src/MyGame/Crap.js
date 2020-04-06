@@ -47,8 +47,7 @@ class Crap extends Engine.Entity {
       return (
          <Sprite src={{
                texture: crapTexture,
-               x: x,
-               y: y,
+               x, y,
                width: 50,
                height: 48,
                z: -1

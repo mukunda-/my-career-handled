@@ -1,9 +1,16 @@
 import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
+import {Howl, Howler} from 'howler';
+import speechSoundFile from './res/speech.wav';
 
 import './SpeechDisplay.css';
 ///////////////////////////////////////////////////////////////////////////////
+
+let speechSound = new Howl({
+   src: speechSoundFile,
+   volume: 0.2
+});
 
 class SpeechDisplay extends Engine.Entity {
    start( options ) {
@@ -19,6 +26,8 @@ class SpeechDisplay extends Engine.Entity {
       this.finished = false;
       this.callback = options.callback;
       this.nomouth  = options.nomouth;
+      this.shouting = options.shouting;
+      this.squish   = "";
 
       if( options.vo ) {
          this.duration = options.vo.duration;
@@ -75,6 +84,15 @@ class SpeechDisplay extends Engine.Entity {
       this.text = text;
       this.textSuffix = textSuffix;
 
+      // Make a copy of the text without any space or punctuation. If it's
+      //  longer than our last copy, then a new character was emitted and
+      //  we should play a sound.
+      let textsquish = text.replace( /\W/g, "" );
+      if( textsquish.length > this.squish.length ) {
+         this.squish = textsquish;
+         speechSound.play();
+      }
+
       let oldElement = document.getElementById( this.key + "-inner" )
       if( !!oldElement ) {
          
@@ -104,7 +122,8 @@ class SpeechDisplay extends Engine.Entity {
                x: 8,
                y: 10,
                width: 90,
-               height: 76
+               height: 76,
+               transform: `scale(${this.shouting?2.0:1.0})`
             }}/>
             
             <div className="frame">

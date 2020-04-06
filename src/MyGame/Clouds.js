@@ -15,8 +15,7 @@ class Clouds extends Engine.Entity {
       return (
          <Sprite src={{
                texture: cloudTexture,
-               x: x, //((0 - this.cloudScroll - camera[0]  * 0.1) % 472),
-               y: y, //-53 - camera[1] * 0.1,
+               x, y,
                width: displaySize[0] + 472,
                height: 137
             }}

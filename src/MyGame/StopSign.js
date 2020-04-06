@@ -16,8 +16,7 @@ class StopSign extends Engine.Entity {
       const [x, y] = Engine.translate( this.x - 32/2, this.y - 40 );
       return (
          <Sprite src={{
-               x: x,
-               y: y,
+               x, y,
                width: 32,
                height: 40,
                texture: stopTexture

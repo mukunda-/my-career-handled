@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './Base.css';
 import Scene from './Scene';
-import GameHost from './Engine';
+import Engine from './Engine';
 import MyGame from './MyGame/MyGame';
 import * as serviceWorker from './serviceWorker';
 
@@ -26,7 +26,7 @@ function adjustViewportScale() {
    
    if( vw !== currentScreenSize[0] || vh !== currentScreenSize[1] ) {
       currentScreenSize = [vw, vh];
-      let [scaledWidth, scaledHeight] = GameHost.getDisplaySize();
+      let [scaledWidth, scaledHeight] = Engine.getDisplaySize();
 
       // This is for extra-dense screens, as far as I know from brief reading
       //  this is 1 or 2, depending on if the screen has extremely small
@@ -48,14 +48,38 @@ function adjustViewportScale() {
          scaledHeight *= scale;
       }
 
-      viewportScale = scaledWidth / GameHost.getDisplaySize()[0];
+      viewportScale = scaledWidth / Engine.getDisplaySize()[0];
    }
 }
 
 //-----------------------------------------------------------------------------
-function onTap() {
+function onTap( e ) {
+   // Binding for engine and tapping is here.
+   console.log( e );
+   console.log( e.offsetX );
 
+   let displaySize  = Engine.getDisplaySize();
+   const marginLeft = (currentScreenSize[0] - displaySize[0] * viewportScale) / 2.0;
+   const marginTop = (currentScreenSize[1] - displaySize[1] * viewportScale) / 2.0;
+   const width = displaySize[0] * viewportScale;
+   const height = displaySize[1] * viewportScale;
+
+   let mx = e.clientX;
+   let my = e.clientY;
+
+   mx = ((mx - marginLeft) / width) * displaySize[0];
+   my = ((my - marginTop) / height) * displaySize[1];
+   
+   Engine.tap( mx, my );
 }
+function onKeyDown() {
+   Engine.setTimeScale( 25 );
+}
+function onKeyUp() {
+   Engine.setTimeScale( 1.0 );
+}
+document.addEventListener('keyup', onKeyUp);
+document.addEventListener('keydown', onKeyDown);
 
 //-----------------------------------------------------------------------------
 let Viewport = (props) => {
@@ -68,23 +92,22 @@ let Viewport = (props) => {
    }; 
 
    return (
-      <div className="Viewport" style={style} onClick={onTap}>
+      <div className="Viewport" style={style} onClick={onTap} >
          {props.children}
       </div>
    );
 }
 
-//-----------------------------------------------------------------------------
-function renderLoop() {
+function onTick() {
    adjustViewportScale();
-   GameHost.update();
-   let components   = GameHost.render();
-   let sceneOptions = GameHost.getRenderOptions();
-   let displaySize  = GameHost.getDisplaySize();
+   Engine.update();
+   let components   = Engine.render();
+   let sceneOptions = Engine.getRenderOptions();
+   let displaySize  = Engine.getDisplaySize();
    
    ReactDOM.render(
       <React.StrictMode>
-         <Viewport scale={viewportScale} size={displaySize}>
+         <Viewport scale={viewportScale} size={displaySize} id="viewport">
             <Scene options={sceneOptions}>
                {components}
             </Scene>
@@ -92,10 +115,15 @@ function renderLoop() {
       </React.StrictMode>,
       document.getElementById('root')
    );
+}
+
+//-----------------------------------------------------------------------------
+function renderLoop() {
+   onTick();
    window.requestAnimationFrame( renderLoop );
 }
 
-GameHost.reset();
+Engine.reset();
 MyGame.Start();
 renderLoop();
 
@@ -103,3 +131,5 @@ renderLoop();
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+export {onTick};

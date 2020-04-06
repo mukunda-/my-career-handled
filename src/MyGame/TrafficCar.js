@@ -1,9 +1,17 @@
 import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
+import {Howl} from 'howler';
 
 import carsTexture from './res/cars.png';
+
+import carSoundFile from './res/trafficslow.mp3';
 ///////////////////////////////////////////////////////////////////////////////
+
+const slowSound = new Howl({
+   src: carSoundFile,
+   volume: 0.2
+});
 
 //-----------------------------------------------------------------------------
 class TrafficCar extends Engine.Entity {
@@ -13,6 +21,7 @@ class TrafficCar extends Engine.Entity {
       this.y = y;// roadLevel;
       this.speed = (50 + Math.pow(Math.random(), 2.0) * 100.0) * 2.5;
       this.model = Math.floor(Math.random() * 5);
+      slowSound.play();
    }
    update( time ) {
       this.x -= time * this.speed;
@@ -28,8 +37,7 @@ class TrafficCar extends Engine.Entity {
       return (
          <Sprite src={{
                texture: carsTexture,
-               x: x,
-               y: y,
+               x, y,
                z: -5,
                width: 164,
                height: 58,

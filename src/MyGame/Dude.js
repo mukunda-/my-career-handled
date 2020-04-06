@@ -77,6 +77,10 @@ class Dude extends Engine.Entity {
       this.moveCallback = completionCallback;
    }
 
+   stopUsingCell() {
+      this.makingACall = false;
+   }
+
    useCell( ) {
       this.makingACall = true;
    }
@@ -93,8 +97,8 @@ class Dude extends Engine.Entity {
          <Sprite
             src={{
                texture: texture,
-               x: x,
-               y: y,
+               x,
+               y,
                width: 49,
                height: 84,
                z: 1,

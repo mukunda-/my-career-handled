@@ -32,7 +32,7 @@ let Sprite = ( props ) => {
    if( props.src.opacity ) {
       style.opacity = props.src.opacity;
    }
-   return <div className="Sprite" style={style}></div>;
+   return <div className="Sprite" style={style}>{props.children}</div>;
 }
 
 export default Sprite;

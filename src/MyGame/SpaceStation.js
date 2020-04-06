@@ -19,8 +19,7 @@ class SpaceStation extends Engine.Entity {
       const [x, y] = Engine.translate( this.x - 867/2, this.y - 238 );
       return (
          <Sprite src={{
-            x: x,
-            y: y,
+            x, y,
             width: 867,
             height: 280,
             texture: spaceStationTxture,

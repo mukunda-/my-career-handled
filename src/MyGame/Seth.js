@@ -21,8 +21,7 @@ class Seth extends Engine.Entity {
 
       return (
          <Sprite src={{
-            x: x,
-            y: y,
+            x, y,
             width: 49,
             height: 64,
             texture: sethTexture,

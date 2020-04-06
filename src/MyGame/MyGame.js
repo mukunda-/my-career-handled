@@ -3,6 +3,8 @@
 //
 // (C) 2020 Mukunda Johnson (www.mukunda.com)
 ///////////////////////////////////////////////////////////////////////////////
+import React from 'react';
+
 import Actors        from './Actors';
 import Chris         from './Chris';
 import Clouds        from './Clouds';
@@ -10,6 +12,8 @@ import Crap          from './Crap';
 import Dude          from './Dude';
 import Engine        from '../Engine';
 import Handled       from './Handled';
+import {Howl}        from 'howler';
+import PhoneApp      from './PhoneApp';
 import RedLight      from './RedLight';
 import Road          from './Road';
 import Seth          from './Seth';
@@ -17,11 +21,19 @@ import SpaceStation  from './SpaceStation';
 import SpeechDisplay from './SpeechDisplay';
 import Starfield     from './Starfield';
 import StopSign      from './StopSign';
+import Tapper        from './Tapper';
 import TrafficCar    from './TrafficCar';
 import Truck         from './Truck';
 
+import beatItFile    from './res/beatit.mp3';
 ///////////////////////////////////////////////////////////////////////////////
 const roadLevel = 234;
+let stateInstance;
+
+const beatIt = new Howl({
+   src: beatItFile,
+   volume: 0.5
+});
 
 //-----------------------------------------------------------------------------
 // I really hate putting the delay time AFTER the function definition.
@@ -121,9 +133,8 @@ class State extends Engine.Entity {
             //this.truck.rollUp();
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Hey Internet! I'm Mukunda Johnson, and today I'm going to move to the HANDLED virtual headquarters!",
+               text: "Hi, Internet! I'm Mukunda Johnson, and I want to work at Handled!>>>>>>>> But first, I need some help getting there.",
                callback: () => {
-                  //this.setScene( "take off" );
                   this.setScene( "start3" );
                }
             });
@@ -131,32 +142,74 @@ class State extends Engine.Entity {
          break;
       case "start3":
          afterDelay( 2.4, () => {
+            afterDelay( 0.5, () => {
+               this.dude.useCell();
+            });
+            afterDelay( 0.6, () => {
+               this.phone = new PhoneApp();
+            });
             this.speech.start({
                actor: Actors.mukunda,
-               text: "My programmer made me kind of dumb, but that's okay;"
-                    +">>> you don't need a brain to use the highly intuitive Handled app! "
-                    +">>>>>>>>>>>>Let me try and figure it out.",
+               text: "My programmer made me so dumb that I cannot fathom how to use the shockingly intuitive Handled app.>>>>> Can you figure it out?",
                callback: () => {
-                  this.setScene( "use_handled_app" );
+                  const [x, y] = this.phone.getRenderPosition();
+                  this.phoneTapper = new Tapper( x, y, 150, () => {
+                     this.setScene( "use_handled_app" );
+                     this.phone.setContent( "SCANNING" );
+                  });
                }
             });
          });
          break;
       case "use_handled_app":
-         afterDelay( 2.4, () => {
+         
+         afterDelay( 2.5, () => {
+            this.phone.setContent( <div>MUKUNDAS<br/>CRAP</div> );
+         });
+         afterDelay( 4.5, () => {
+            this.phone.setContent( 
+               <div>
+                  MUKUNDAS<br/>CRAP<br/><br/>
+                  AUTOMATIC<br/>MACHINE QUOTE™<br/>
+                  <span style={{color: "#080"}}>$428,855</span><br/><br/>
+                  <small>GUARANTEED!</small>
+               </div>
+            );
             this.dude.useCell();
+
+         });
+         afterDelay( 3.4, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "I just pull out my phone and...>>> scan my stuff... >>>>>Oh!>>>> the machine learning read my mind, and I didn't even need to point my camera.>>> That's alarmingly painless.",
+               text: "Aha! Point and click; I would have never discovered that on my own! Thank you!"
+                  +">>>>>>>>>>> And there is my automatic GUARANTEED quote!"
+                  +">>>>>>>>>>> That was alarmingly painless!"
+                  +">>>>>>>>>>>>>>>>>>>> Machine learning sure is getting smart these days."
+                  +">>>>>>>>>>>>>>>>>>>> Soon, I will have no need for my grossly fallible brain.",
                callback: () => {
-                  this.setScene( "chris rolls up" );
+                  this.setScene( "use handled app 2" );
+               }
+            });
+         });
+         break;
+      case "use handled app 2":
+         afterDelay( 2.0, () => {
+            this.speech.start({
+               actor: Actors.mukunda,
+               text: "I'm submitting the request...",
+               callback: () => {
+                  afterDelay( 1.0, () => {
+                     this.setScene( "chris rolls up" );
+                  });
                }
             });
          });
          break;
       case "chris rolls up":
+         this.phone.obliterate();
+         this.dude.stopUsingCell();
          this.truck.rollUp( Engine.getCamera()[0] + 220 );
-         afterDelay( 2.5, () => {
+         afterDelay( 4.5, () => {
             this.chris.spawn( this.truck.x + 50, roadLevel );
             this.chris.moveTo( this.crap.x );
             this.speech.start({
@@ -172,7 +225,7 @@ class State extends Engine.Entity {
          afterDelay( 2, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Chris?? I didn't know you were also a Hand!",
+               text: "Chris?? I didn't know you were also a part-time Hand!",
                callback: () => {
                   
                   this.setScene( "throw crap" );
@@ -203,32 +256,48 @@ class State extends Engine.Entity {
                actor: Actors.chris,
                text: "Let's roll the ball forward, my friend.",
                callback: () => {
-                  
+                  new Tapper( this.truck.x, this.truck.y - 55, 150, () => {
+                     this.dude.moveTo( this.truck.x + 50, () => {
+                        this.dude.hide();
+                        this.setScene( "speeding" );
+                     });
+                  });
                }
             });
          });
-         afterDelay( 3.0, () => {
-            this.dude.moveTo( this.truck.x + 50, () => {
-               this.dude.hide();
-               this.setScene( "speeding" );
-            });
-         });
+         
          break;
       case "speeding":
+         this.beatitTrack = beatIt.play();
          afterDelay( 0.5, () => {
-            this.speech.hide();
+            this.speech.start({
+               actor: Actors.mukunda,
+               text: "All right, let's go! On the way, we can talk about boring things like software.",
+               callback: () => {
+                  this.setScene( "speeding 2" );
+               }
+            });
             this.truck.gogogo();
             this.followTruck = true;
          });
-         afterDelay( 1.0, () => {
-            this.setScene( "stopsign" );
-         })
+         break;
+      case "speeding 2":
+         afterDelay( 2.0, () => {
+            this.speech.start({
+               actor: Actors.mukunda,
+               text: "This is my first React app, built in a few days as an exercise to get myself in shape for my new role.>>>>>> I'll be back-end, but it doesn't hurt at all to be familiar with the fr--",
+               callback: () => {
+                  this.setScene( "stopsign" );
+               }
+            });
+            
+         });
          break;
       case "stopsign":
-         afterDelay( 3.0, () => {
+         {
             const x = Engine.getCamera()[0] + Engine.getDisplaySize()[0] + 25;
             this.stopsign = new StopSign( x, roadLevel );
-         });
+         }
          break;
       case "ran stop sign":
          this.speech.start({
@@ -238,7 +307,7 @@ class State extends Engine.Entity {
                afterDelay( 2.0, () => {
                   this.speech.start({
                      actor: Actors.chris,
-                     text: "Your move, Handled!",
+                     text: "I guess you could say, that I Handled that quite well...",
                      callback: () => {
                         this.setScene( "part2" );
                      }
@@ -252,15 +321,15 @@ class State extends Engine.Entity {
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "This might not be my best app, but it's an exercise to get a product done however it takes within a certain deadline for the thirsty clients.>>>>>>>>>>> That's you guys!",
+               text: "Okay...>>>>> this app also employs some neat things like automated testing, or CI, and deployment to AWS services. End to end testing too, using Chromium, Firefox, and--",
                callback: () => {
-                  this.setScene( "red light coming 3" );
+                  this.setScene( "red light coming" );
                }
             });
          });
          break;
       case "red light coming":
-         afterDelay( 2.5, () => {
+         afterDelay( 0.5, () => {
             this.speech.start({
                actor: Actors.mukunda,
                text: "Um... red light, Chris...>>>>>>>>>>> ...RED LIGHT, CHRIS!!",
@@ -281,7 +350,8 @@ class State extends Engine.Entity {
          afterDelay( 1.5, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "WE CAN'T MAKE IT - IT'S ALREADY RED!!",
+               shouting: true,
+               text: "WE CAN'T MAKE IT, CHRIS - IT'S ALREADY RED!!",
                callback: () => this.setScene( "red light" )
             });
          });
@@ -313,7 +383,7 @@ class State extends Engine.Entity {
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Oh whoa, we're flying!",
+               text: "We're flying?!",
                callback: () => this.setScene( "flying 2" )
             });
          });
@@ -331,7 +401,7 @@ class State extends Engine.Entity {
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Oh right, the Handled office is located in the cloud!",
+               text: "Oh, right! The Handled office is located in the cloud!",
                callback: () => this.setScene( "to space" )
             });
          });
@@ -352,7 +422,7 @@ class State extends Engine.Entity {
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Just so you're aware, Chris, as I am a proactive communicator - I didn't pack any Oxygen.>>>>>>>>>> But I'm willing to be flexible to be a part of your superb company.",
+               text: "Just so you're aware,>>> Chris,>>> because communication is key to success in a business: I didn't pack any Oxygen.>>>>>>>>> I'm willing to be flexible though, to be a part of your superb company.",
                callback: () => this.setScene( "to space 3" )
             });
          });
@@ -370,7 +440,7 @@ class State extends Engine.Entity {
          afterDelay( 2.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "*Nervous Asphyxiation*",
+               text: "(Nervous Asphyxiation)",
                nomouth: true,
                callback: () => this.setScene( "to space 5" )
             });
@@ -394,6 +464,7 @@ class State extends Engine.Entity {
          });
          break;
       case "to station":
+         beatIt.fade( 0.5, 0.2, 1000, this.beatitTrack );
          afterDelay( 3.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
@@ -435,12 +506,16 @@ class State extends Engine.Entity {
          break;
       case "station 5":
          afterDelay( 3.0, () => {
+            beatIt.fade( 0.2, 0.7, 3000, this.beatitTrack );
             this.speech.hide();
             this.followTruck = false;
             this.cameraFloat = true;
          });
          afterDelay( 10.0, () => {
             this.handled = new Handled();
+         });
+         afterDelay( 15.0, () => {
+            this.game_over = true;
          });
          break;
       default:
@@ -492,7 +567,7 @@ class State extends Engine.Entity {
       this.onSceneUpdate( this.scene, updateTime );
       
       // Car spawner, runs async to everything else.
-      if( Engine.getTime() > this.nextTrafficTime ) {
+      if( Engine.getTime() > this.nextTrafficTime && !this.truck.flying ) {
          this.scheduleTrafficCar();
          let x = Engine.getCamera()[0] + Engine.getDisplaySize()[0] + 200;
          let y = roadLevel;
@@ -503,7 +578,6 @@ class State extends Engine.Entity {
 
       if( this.followTruck ) {
          let desiredCameraX = this.truck.x - 100;
-         console.log( desiredCameraX );
          let delta = Math.pow( 0.8, updateTime * 60 );
          camera[0] = camera[0] * delta + desiredCameraX * (1-delta);
          if( this.truck.flying ) {
@@ -540,11 +614,15 @@ class State extends Engine.Entity {
 
 //-----------------------------------------------------------------------------
 function Start() {
-    Engine.reset();
-    new State();
+   Engine.reset();
+   stateInstance = new State();
+}
+
+function getStateInstance() {
+   return stateInstance;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 export default {
-    Start, State
+    Start, getStateInstance
 }
