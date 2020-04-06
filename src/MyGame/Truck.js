@@ -1,44 +1,42 @@
-///////////////////////////////////////////////////////////////////////////////
+// The orange Handled truck to get us from point A to point B, in space.
+//
+import Audio  from './Audio';
 import Engine from "../Engine";
-import React from 'react';
+import React  from 'react';
 import Sprite from '../Sprite';
-import {Howl} from 'howler';
-import truckTexture from './res/handled_truck.png';
-import wheelTexture from './res/wheel.png';
 
-import slowSoundFile from './res/truckslow.ogg';
-import speedSoundFile from './res/speeding.mp3';
+import truckTexture       from './res/handled_truck.png';
+import wheelTexture       from './res/wheel.png';
+import slowSoundFile      from './res/truckslow.ogg';
+import speedSoundFile     from './res/speeding.mp3';
 import speedSoundLoopFile from './res/speedloop.wav';
-import takeoffSoundFile from './res/takeoff.mp3';
-import rocketSoundFile from './res/rocket.mp3';
-// slow driving
-// speedup
-// speedloop
-// flying
+import takeoffSoundFile   from './res/takeoff.mp3';
+import rocketSoundFile    from './res/rocket.mp3';
 ///////////////////////////////////////////////////////////////////////////////
 
-const slowSound = new Howl({
+//-----------------------------------------------------------------------------
+const slowSound = Audio.load({
    src: slowSoundFile,
    loop: true
 });
 
-const speedSound = new Howl({
+const speedSound = Audio.load({
    src: speedSoundFile,
    volume: 0.4
 });
 
-const speedSoundLoop = new Howl({
+const speedSoundLoop = Audio.load({
    src: speedSoundLoopFile,
    loop: true,
    volume: 0.4
 });
 
-const takeoffSound = new Howl({
+const takeoffSound = Audio.load({
    src: takeoffSoundFile,
    volume: 0.5
 });
 
-const rocketSound = new Howl({
+const rocketSound = Audio.load({
    src: rocketSoundFile,
    volume: 0.5,
    loop: true

@@ -6,13 +6,13 @@
 import React from 'react';
 
 import Actors        from './Actors';
+import Audio         from './Audio';
 import Chris         from './Chris';
 import Clouds        from './Clouds';
 import Crap          from './Crap';
 import Dude          from './Dude';
 import Engine        from '../Engine';
 import Handled       from './Handled';
-import {Howl}        from 'howler';
 import PhoneApp      from './PhoneApp';
 import RedLight      from './RedLight';
 import Road          from './Road';
@@ -25,14 +25,29 @@ import Tapper        from './Tapper';
 import TrafficCar    from './TrafficCar';
 import Truck         from './Truck';
 
-import beatItFile    from './res/beatit.mp3';
+import beatItFile     from './res/beatit.mp3';
+import crashSoundFile from './res/crash.mp3';
+import openSoundFile  from './res/open.mp3';
 ///////////////////////////////////////////////////////////////////////////////
+// The vertical coordinate where the road starts. 0 = clouds, 234 = road.
 const roadLevel = 234;
-let stateInstance;
+let stateInstance; // For exposing state for testing code.
 
-const beatIt = new Howl({
+//-----------------------------------------------------------------------------
+// Sound files to load.
+const beatIt = Audio.load({
    src: beatItFile,
    volume: 0.5
+});
+
+const openSound = Audio.load({
+   src: openSoundFile,
+   volume: 0.4
+});
+
+const crashSound = Audio.load({
+   src: crashSoundFile,
+   volume: 0.6
 });
 
 //-----------------------------------------------------------------------------
@@ -210,6 +225,7 @@ class State extends Engine.Entity {
          this.dude.stopUsingCell();
          this.truck.rollUp( Engine.getCamera()[0] + 220 );
          afterDelay( 4.5, () => {
+            openSound.play();
             this.chris.spawn( this.truck.x + 50, roadLevel );
             this.chris.moveTo( this.crap.x );
             this.speech.start({
@@ -237,6 +253,7 @@ class State extends Engine.Entity {
          afterDelay( 2.0, () => {
             this.crap.fling();
             this.chris.moveTo( this.truck.x + 50, () => {
+               openSound.play();
                this.chris.hide();
             });
             afterDelay( 1.0, () => {
@@ -258,6 +275,7 @@ class State extends Engine.Entity {
                callback: () => {
                   new Tapper( this.truck.x, this.truck.y - 55, 150, () => {
                      this.dude.moveTo( this.truck.x + 50, () => {
+                        openSound.play();
                         this.dude.hide();
                         this.setScene( "speeding" );
                      });
@@ -332,7 +350,7 @@ class State extends Engine.Entity {
          afterDelay( 0.5, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "Um... red light, Chris...>>>>>>>>>>> ...RED LIGHT, CHRIS!!",
+               text: "Um... red light, Chris...>>>>>>>>>>> RED LIGHT, CHRIS!!",
                callback: () => this.setScene( "red light coming 2" )
             });
          });
@@ -357,6 +375,7 @@ class State extends Engine.Entity {
          });
          break;
       case "red light": {
+         crashSound.play();
          const x = Engine.getCamera()[0] + Engine.getDisplaySize()[0] + 25;
          this.redlight = new RedLight( x, roadLevel );
          break;
@@ -384,6 +403,7 @@ class State extends Engine.Entity {
             this.speech.start({
                actor: Actors.mukunda,
                text: "We're flying?!",
+               shouting: true,
                callback: () => this.setScene( "flying 2" )
             });
          });

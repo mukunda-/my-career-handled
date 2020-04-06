@@ -1,13 +1,13 @@
 import Engine from '../Engine';
 import React from 'react';
 import Sprite from '../Sprite';
-import {Howl, Howler} from 'howler';
+import Audio from './Audio';
 import speechSoundFile from './res/speech.wav';
 
 import './SpeechDisplay.css';
 ///////////////////////////////////////////////////////////////////////////////
 
-let speechSound = new Howl({
+const speechSound = Audio.load({
    src: speechSoundFile,
    volume: 0.2
 });

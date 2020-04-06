@@ -1,9 +1,23 @@
 import Engine from "../Engine";
+import {Howl} from 'howler';
 import React from 'react';
 import Sprite from '../Sprite';
 
 import crapTexture from './res/crap.png';
+
+import flingSoundFile from './res/fling.mp3';
+import crashSoundFile from './res/crapcrash.mp3';
 ///////////////////////////////////////////////////////////////////////////////
+
+const flingSound = new Howl({
+   src: flingSoundFile,
+   volume: 0.6
+});
+
+const crashSound = new Howl({
+   src: crashSoundFile,
+   volume: 0.8
+});
 
 //-----------------------------------------------------------------------------
 // A box full of my crap; supports a function to fling it into the truck.
@@ -21,8 +35,10 @@ class Crap extends Engine.Entity {
    //--------------------------------------------------------------------------
    // Fling the box to the right and make it despawn.
    fling() {
+      flingSound.play();
       this.vel = [ 500, -220 ];
       Engine.after( 0.3, () => {
+         crashSound.play();
          this.active = false;
       });
       this.flinging = true;
