@@ -1,4 +1,6 @@
+/* CSS for the phone app simulation at the start. */
 .PhoneApp.text {
+    /* A nice tiny font. */
     text-align: center;
     position: absolute;
     font-family: Pokemon;

@@ -1,7 +1,7 @@
 // This handles the cars that periodically pass by, spawned by the overall game
 //  script.
 //
-import Audio  from '/Audio';
+import Audio  from './Audio';
 import Engine from '../Engine';
 import React  from 'react';
 import Sprite from '../Sprite';

@@ -1,0 +1,8 @@
+/* Used at the beginning of the game. */
+.TextPrompt {
+    position: absolute;
+    margin-top: -0.5em;
+    text-align: center;
+    font-family: Pokemon;
+    user-select: none;
+}

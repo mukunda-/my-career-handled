@@ -2,6 +2,7 @@
 //  when they're all loaded for a smooth experience.
 
 import {Howl} from 'howler';
+import Engine from '../Engine';
 ///////////////////////////////////////////////////////////////////////////////
 const howls = [];
 
@@ -24,11 +25,12 @@ function loadingProgress() {
    });
 
    if( loadingCount > 0 ) {
-      return loadingCount / totalCount;
+      return (totalCount-loadingCount) / totalCount;
    } else {
+      if( Engine.getTime() < 2.0 ) return 0.9;
       return 1;
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-export default { load };
+export default { load, loadingProgress };

@@ -1,7 +1,9 @@
-import { render, fireEvent } from '@testing-library/react';
 import Engine from '../Engine';
 import Tapper from './Tapper';
 ///////////////////////////////////////////////////////////////////////////////
+// This was a good opportunity for test driven development, a module that was
+//  easy to write tests for before implementation. It feels good to write code
+//  that you know will work right, because it's tested!
 
 beforeEach( () => Engine.reset() );
 
@@ -11,7 +13,7 @@ test( 'tapper entity', async () => {
    const mock = jest.fn();
 
    {
-      let tapper = new Tapper( 150, 150, 25, mock );
+      const tapper = new Tapper( 150, 150, 25, mock );
       Engine.tap( 150, 150 );
       expect( mock ).toHaveBeenCalledTimes( 1 );
       expect( mock ).toHaveBeenCalledWith( 150, 150 );
@@ -22,7 +24,7 @@ test( 'tapper entity', async () => {
 
    {
       // This one doesn't kill itself.
-      let tapper = new Tapper( 140, 150, 25, mock, false );
+      const tapper = new Tapper( 140, 150, 25, mock, false );
 
       // Should be a miss. (Catch if we are cleaning up the
       //  previous one properly.)
@@ -43,5 +45,4 @@ test( 'tapper entity', async () => {
       tapper.obliterate();
       expect( Engine.getEntityList.length ).toEqual( 0 );
    }
-   
 });

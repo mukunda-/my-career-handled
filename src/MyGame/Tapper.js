@@ -29,6 +29,12 @@ class Tapper extends Engine.Entity {
    }
 
    //--------------------------------------------------------------------------
+   // Disable the pointing arrow for this tapper, assuming some other prompt.
+   hidePointer() {
+      this.disableRender = true;
+   }
+
+   //--------------------------------------------------------------------------
    obliterate() {
       this.unhook();
       super.obliterate();
@@ -53,6 +59,7 @@ class Tapper extends Engine.Entity {
 
    //--------------------------------------------------------------------------
    render() {
+      if( this.disableRender ) return;
       let [x, y] = Engine.translate( this.x - 16, this.y - 16);
       y -= 40;
       y += Math.sin( Engine.getTime() * 8 ) * 35;
