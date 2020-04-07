@@ -5,12 +5,12 @@ import {Howl} from 'howler';
 import Engine from '../Engine';
 ///////////////////////////////////////////////////////////////////////////////
 const howls = [];
-
+/*
 class DummyHowl {
    play() {}
    fade() {}
    state() { return "loaded"; }
-}
+}*/
 
 //-----------------------------------------------------------------------------
 // Accepts the same input as Howl and returns the same, just a proxy to keep
