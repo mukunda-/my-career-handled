@@ -1,4 +1,4 @@
-My Career, Handled!
+**My Career, Handled!**
 
 A little app for my potential pals at handled.com.
 
