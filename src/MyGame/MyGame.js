@@ -189,7 +189,9 @@ class State extends Engine.Entity {
                this.dude.useCell();
             });
             afterDelay( 0.6, () => {
-               this.phone = new PhoneApp();
+               if( !this.phone ) {
+                  this.phone = new PhoneApp();
+               }
             });
             this.speech.start({
                actor: Actors.mukunda,
@@ -199,6 +201,11 @@ class State extends Engine.Entity {
                callback: () => {
                   // Once he's done saying that, show a tapper signal and wait
                   //  for user input.
+                  if( !this.phone ) {
+                     // We do this here too because when fast-forwarding that
+                     //  text might speed by before the phone is created.
+                     this.phone = new PhoneApp();
+                  }
                   const [x, y] = this.phone.getRenderPosition();
                   this.phoneTapper = new Tapper( x, y, 150, () => {
                      this.setScene( "use_handled_app" );
@@ -433,7 +440,7 @@ class State extends Engine.Entity {
                text: "Actually, it was kind of the opposite, Chris..."
                     +">>>>>>> So anyway, this app also employs some neat things "
                     +"like automated testing, or CI, and deployment to AWS "
-                    +"Amplify. End to end testing too, using playwright to "
+                    +"Amplify. End to end testing too, using Playwright to "
                     +"simulate Chromium, Firefox, and--",
                callback: () => {
                   this.setScene( "red light coming" );
