@@ -122,19 +122,19 @@ async function runBrowserTest( browserType ) {
 //-----------------------------------------------------------------------------
 // The mommy of all the tests, running it from a web browser simulation.
 // This is totally overkill for this little game, but it's for the exercise...
-test( "e2e production chromium", async () => {
+test( "e2e production", async () => {
    await runBrowserTest( "chromium" );
-}, 50000);
-
+   await runBrowserTest( "firefox" );
+}, 100000);
+/*
 test( "e2e production firefox", async () => {
    // I actually discovered that my stuff didn't work in Firefox from this
    //  test.
-   await runBrowserTest( "firefox" );
 }, 50000);
 
 test( "e2e production webkit", async () => {
    // (TODO: this just crashes for me currently.)
    //await runBrowserTest( "webkit" );
 }, 50000);
-
+*/
 ///////////////////////////////////////////////////////////////////////////////
