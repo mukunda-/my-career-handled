@@ -3,6 +3,7 @@
   src: url(./fonts/Pokemon.woff) format('woff');
 }
 
+/* This is used for an invisible container behind the speechbox. */
 .Speechbox {
   position: absolute;
   left: 0px;
@@ -13,6 +14,18 @@
   z-index: 2;
 }
 
+/* The avatar sits behind the visible speechbox frame, so it's masked by the
+    smaller window. */
+.Speechbox .avatar {
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  width: 90px;
+  height: 76px;
+  overflow: hidden;
+}
+
+/* This is the main frame graphic. */
 .Speechbox .frame {
   background: url(./res/nostalgia.png);
   position: absolute;
@@ -24,15 +37,8 @@
   
 }
 
-.Speechbox .avatar {
-  position: absolute;
-  left: 8px;
-  top: 10px;
-  width: 90px;
-  height: 76px;
-  overflow: hidden;
-}
-
+/* The text display. This is a container for it, and then the .inner element
+   scrolls inside of it. */
 .Speechbox .text {
   font-family: "Pokemon", sans-serif;
   font-size: 16px;
@@ -51,7 +57,10 @@
   top: -12px;
 }
 
-/* Invisible letters are  */
+/* Normally, when slowly rendering words to the screen, they may start on an
+    upper line and then teleport to the next line if they get too long. This is
+    to prevent that, by rendering whole words - but anything that hasn't been
+                  reached by the reader point yet is rendered as invisible. */
 .invisible {
   color: transparent;
 }

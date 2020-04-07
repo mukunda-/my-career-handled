@@ -1,16 +1,18 @@
+// A Tapper is an area that can be clicked, and by default includes an arrow
+//  pointing to it to direct the user. When it's clicked, it triggers a
+//  callback function and, if the `once` option is set (yes by default), it
+//  obliterates itself.
 import Engine from '../Engine';
-import React from 'react';
+import React  from 'react';
 import Sprite from '../Sprite';
 
 import tapTexture from './res/tapper.png';
 ///////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------
-// This spawns an area that can be clicked, along with an arrow pointing to it
-//  to direct the user. When it's clicked, it obliterates itself and triggers
-//  a callback.
 class Tapper extends Engine.Entity {
    //--------------------------------------------------------------------------
+   // See top of file.
    constructor( x, y, radius, callback, once = true ) {
       super();
       this.x        = x;
@@ -35,6 +37,7 @@ class Tapper extends Engine.Entity {
    }
 
    //--------------------------------------------------------------------------
+   // Override to handle unregistering the tapping hook.
    obliterate() {
       this.unhook();
       super.obliterate();
@@ -60,7 +63,9 @@ class Tapper extends Engine.Entity {
    //--------------------------------------------------------------------------
    render() {
       if( this.disableRender ) return;
+
       let [x, y] = Engine.translate( this.x - 16, this.y - 16);
+      // Some janky math for a bouncing arrow.
       y -= 40;
       y += Math.sin( Engine.getTime() * 8 ) * 35;
 
@@ -68,8 +73,8 @@ class Tapper extends Engine.Entity {
          <Sprite
             src={{
                x, y,
-               width: 32,
-               height: 32,
+               width:   32,
+               height:  32,
                texture: tapTexture
             }}
             key={this.key}

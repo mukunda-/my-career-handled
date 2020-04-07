@@ -1,7 +1,7 @@
 import Engine from '../Engine';
 import Tapper from './Tapper';
 ///////////////////////////////////////////////////////////////////////////////
-// This was a good opportunity for test driven development, a module that was
+// This was a good opportunity for test-driven development, a module that was
 //  easy to write tests for before implementation. It feels good to write code
 //  that you know will work right, because it's tested!
 

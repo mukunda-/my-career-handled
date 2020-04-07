@@ -1,15 +1,18 @@
-import React from 'react';
+import React    from 'react';
 import ReactDOM from 'react-dom';
-import './Base.css';
-import Scene from './Scene';
-import Engine from './Engine';
-import MyGame from './MyGame/MyGame';
+import Scene    from './Scene';
+import Engine   from './Engine';
+import MyGame   from './MyGame/MyGame';
+
 import * as serviceWorker from './serviceWorker';
 
+import './Base.css';
+///////////////////////////////////////////////////////////////////////////////
 let currentScreenSize = [0, 0];
-let viewportScale = 1.0;
+let viewportScale     = 1.0;
 
 //-----------------------------------------------------------------------------
+// Returns the pixel dimensions of the user's client area.
 function getDeviceDimensions() {
    return [Math.max( document.documentElement.clientWidth, window.innerWidth || 0 ),
            Math.max( document.documentElement.clientHeight, window.innerHeight || 0 )];
@@ -53,10 +56,8 @@ function adjustViewportScale() {
 }
 
 //-----------------------------------------------------------------------------
+// Binding for engine and tapping is here.
 function onTap( e ) {
-   // Binding for engine and tapping is here.
-   console.log( e );
-   console.log( e.offsetX );
 
    let displaySize  = Engine.getDisplaySize();
    const marginLeft = (currentScreenSize[0] - displaySize[0] * viewportScale) / 2.0;
@@ -69,9 +70,15 @@ function onTap( e ) {
 
    mx = ((mx - marginLeft) / width) * displaySize[0];
    my = ((my - marginTop) / height) * displaySize[1];
+
+   console.log( `Tapped [${mx}, ${my}].` );
    
    Engine.tap( mx, my );
 }
+
+//-----------------------------------------------------------------------------
+// Debug functions - not quite sure yet how to only enable this for debug
+//  builds.
 function onKeyDown() {
    Engine.setTimeScale( 25 );
 }
@@ -82,6 +89,9 @@ document.addEventListener('keyup', onKeyUp);
 document.addEventListener('keydown', onKeyDown);
 
 //-----------------------------------------------------------------------------
+// Viewport sits at the top level, typically with a Scene as the only child
+//  that holds everything else. The Viewport is what automatically transforms
+//                                                itself with a fitting scale.
 let Viewport = (props) => {
    const style = {
       transform: `scale(${props.scale})`,
@@ -98,12 +108,23 @@ let Viewport = (props) => {
    );
 }
 
+//-----------------------------------------------------------------------------
+// Frame update routine.
 function onTick() {
+
+   // Auto-scale the viewport to fit within the user's device size.
    adjustViewportScale();
+
+   // Update all entities, etc.
    Engine.update();
-   let components   = Engine.render();
-   let sceneOptions = Engine.getRenderOptions();
-   let displaySize  = Engine.getDisplaySize();
+
+   // Generate a list of React components through rendering functions.
+   const components = Engine.render();
+
+   // The engine is in control of some rendering properties, like the backdrop
+   //  color. Game logic interacts with the engine, and not here directly.
+   const sceneOptions = Engine.getRenderOptions();
+   const displaySize  = Engine.getDisplaySize();
    
    ReactDOM.render(
       <React.StrictMode>
@@ -118,18 +139,24 @@ function onTick() {
 }
 
 //-----------------------------------------------------------------------------
+// Run for infinity.
 function renderLoop() {
    onTick();
    window.requestAnimationFrame( renderLoop );
 }
-
-Engine.reset();
-MyGame.Start();
-renderLoop();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
+//-----------------------------------------------------------------------------
+// Entry point is here, reset the Engine and start our game. See MyGame.js.
+
+Engine.reset();
+MyGame.Start();
+renderLoop();
+
+///////////////////////////////////////////////////////////////////////////////
+// Exporting for testing purposes.
 export {onTick};

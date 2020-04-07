@@ -1,8 +1,9 @@
 import React from 'react';
 import './Base.css';
+///////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------
-// A simple texture component.
+// A simple texture component used by a lot of things.
 // props.src holds the position and other attributes for the image.
 //   x, y           Position on screen in pixels.
 //   z              Z-index for this sprite.
@@ -11,6 +12,7 @@ import './Base.css';
 //   texture        Path to texture file (or texture resource).
 //   tx, ty         Texture coordinate. Textures will be set to wrap, too.
 //   custom         Custom style entries, e.g., custom.op (TODO)
+//
 let Sprite = ( props ) => {
    let style = {
       left:             props.src.x + "px",
@@ -32,7 +34,9 @@ let Sprite = ( props ) => {
    if( props.src.opacity ) {
       style.opacity = props.src.opacity;
    }
+
    return <div className="Sprite" style={style}>{props.children}</div>;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 export default Sprite;

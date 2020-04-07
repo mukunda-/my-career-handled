@@ -1,10 +1,12 @@
+// This handles the dialogue box - the avatar display and scrolling
+//  chat text.
 import Engine from '../Engine';
-import React from 'react';
+import React  from 'react';
 import Sprite from '../Sprite';
-import Audio from './Audio';
-import speechSoundFile from './res/speech.wav';
+import Audio  from './Audio';
 
 import './SpeechDisplay.css';
+import speechSoundFile from './res/speech.wav';
 ///////////////////////////////////////////////////////////////////////////////
 
 const speechSound = Audio.load({
@@ -12,12 +14,22 @@ const speechSound = Audio.load({
    volume: 0.2
 });
 
+//-----------------------------------------------------------------------------
 class SpeechDisplay extends Engine.Entity {
+   //--------------------------------------------------------------------------
+   // Options:
+   //   text: The text to write on the screen. Any ">" characters in the text
+   //          will not be drawn, but instead will delay the text scroll (the
+   //          same delay for drawing a character).
+   //   actor: Actor definition. Controls the avatar display. See Actors.js for
+   //           examples.
+   //   nomouth: Do not animate the mouth (mouth feature is currently disabled).
+   //   shouting: Zoom the avatar image to simulate emotion accurately.
+   //   vo: Unimplemented - voiceover info.
    start( options ) {
       this.active    = true;
       this.fullText  = options.text || "MISSING TEXT";
       this.actor     = options.actor;
-      this.reader    = 0;
       this.text      = "";
       this.startTime = Engine.getTime();
       this.mouthMove = 0;
@@ -38,6 +50,7 @@ class SpeechDisplay extends Engine.Entity {
       
    }
 
+   //--------------------------------------------------------------------------
    update( updateTime ) {
       if( !this.active ) return;
       let elapsed = Engine.getTime() - this.startTime
@@ -104,14 +117,17 @@ class SpeechDisplay extends Engine.Entity {
 
    }
 
+   //--------------------------------------------------------------------------
    hide() {
       this.active = false;
    }
 
+   //--------------------------------------------------------------------------
    isDone() {
       return this.finished;
    }
 
+   //--------------------------------------------------------------------------
    render() {
       if( !this.active ) return;
 
@@ -148,4 +164,5 @@ class SpeechDisplay extends Engine.Entity {
    }
 }
 
+//-----------------------------------------------------------------------------
 export default SpeechDisplay;

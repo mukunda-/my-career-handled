@@ -64,14 +64,22 @@ function updateTime() {
    currentTimeMs += elapsed * timeScale;
 }
 
+//-----------------------------------------------------------------------------
+// Force this much time to pass for the next frame. This is for debugging and
+//  fast forwarding. Note that there are throttles in place to keep things from
+//                           going too fast, so large numbers may be truncated.
 function forceTime( amount ) {
    lastTimePollMs -= amount * 1000;
 }
 
+//-----------------------------------------------------------------------------
+// Scale is the ratio of time speed, 1.0 = normal speed, 2.0 = double speed,
+//  0.5 = half speed.
 function setTimeScale( scale ) {
    timeScale = scale;
 }
 
+//-----------------------------------------------------------------------------
 function getTimeScale() {
    return timeScale;
 }
@@ -93,19 +101,34 @@ function getCamera() {
    return [camera[0], camera[1]];
 }
 
+//-----------------------------------------------------------------------------
+// Update the camera position for the next rendering pass.
 function setCamera( x, y ) {
    camera = [x, y];
 }
 
+//-----------------------------------------------------------------------------
+// This callback will be triggered whenever the user taps the screen. The
+//  callback accepts (x, y), which is the mouse coordinates on the screen.
+// That is, if the screen is scaled down to 50%, the coordinates will still
+//                                          have the full displaySize range.
 function registerForTaps( callback ) {
    tapCallbacks.push( callback );
 }
 
+//-----------------------------------------------------------------------------
+// Unhook a function from receiving further callbacks.
+// 
+// TODO: unhooking manually is tedious; how to do this safer?
 function unregisterForTaps( callback ) {
    const index = tapCallbacks.indexOf( callback );
    tapCallbacks.splice( index, 1 );
 }
 
+//-----------------------------------------------------------------------------
+// Feed the engine a mouse tap. This needs to be called from the upper level
+//  by whatever handles user events. The engine by itself does not detect
+//                                                 clicks on the document.
 function tap( x, y ) {
    tapCallbacks.forEach( f => {
       f( x, y );

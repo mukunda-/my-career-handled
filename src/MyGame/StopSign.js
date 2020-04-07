@@ -1,6 +1,5 @@
 // The StopSign is a basic prop that shows a stop sign, used briefly when
-//  Chris demonstrates his talent speeding.
-//
+//                                 Chris demonstrates his talent speeding.
 import Engine from '../Engine';
 import React  from 'react';
 import Sprite from '../Sprite';
@@ -8,6 +7,7 @@ import Sprite from '../Sprite';
 import stopTexture from './res/time2stop.png';
 ///////////////////////////////////////////////////////////////////////////////
 
+//-----------------------------------------------------------------------------
 class StopSign extends Engine.Entity {
    //--------------------------------------------------------------------------
    // Spawn at this coordinate - the pixel position at the foot of the sign.

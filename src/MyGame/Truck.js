@@ -15,32 +15,14 @@ import rocketSoundFile    from './res/rocket.mp3';
 ///////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------
-const slowSound = Audio.load({
-   src: slowSoundFile,
-   loop: true
-});
-
-const speedSound = Audio.load({
-   src: speedSoundFile,
-   volume: 0.4
-});
-
-const speedSoundLoop = Audio.load({
-   src: speedSoundLoopFile,
-   loop: true,
-   volume: 0.4
-});
-
-const takeoffSound = Audio.load({
-   src: takeoffSoundFile,
-   volume: 0.5
-});
-
-const rocketSound = Audio.load({
-   src: rocketSoundFile,
-   volume: 0.5,
-   loop: true
-});
+// Sound effects.
+const slowSound      = Audio.load({ src: slowSoundFile, loop: true });
+const speedSound     = Audio.load({ src: speedSoundFile, volume: 0.4 });
+const speedSoundLoop = Audio.load({ src: speedSoundLoopFile, loop: true, 
+                                    volume: 0.4 });
+const takeoffSound   = Audio.load({ src: takeoffSoundFile, volume: 0.5 });
+const rocketSound    = Audio.load({ src: rocketSoundFile, loop: true,
+                                    volume: 0.5 });
 
 //-----------------------------------------------------------------------------
 class Truck extends Engine.Entity {

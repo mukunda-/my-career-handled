@@ -41,10 +41,9 @@ class TrafficCar extends Engine.Entity {
 
    //--------------------------------------------------------------------------
    render() {
-      // Sprite size = 164 x 58. TODO: the used texture should not touch the
-      //  edge of each texture space, as it can bleed into adjacent textures
-      //  when using a squished display resolution (on small screens).
-      //
+      // Sprite size = 164x58. TODO: the used texture should not touch the edge
+      //  of each texture space, as it can bleed into adjacent textures when
+      //              using a squished display resolution (on small screens).
       const [x, y] = Engine.translate( this.x - 164/2, this.y - 58 );
       return (
          <Sprite src={{
