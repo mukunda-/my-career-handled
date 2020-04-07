@@ -439,10 +439,10 @@ class State extends Engine.Entity {
                actor: Actors.mukunda,
                text: "Actually, it was kind of the opposite, Chris..."
                     +">>>>>>> So anyway, this app also employs some neat things "
-                    +"like automated testing, or CI, and deployment to AWS "
-                    +"Amplify. End to end testing too, using Playwright to "
-                    +"simulate Chromium, Firefox, and--",
-                    // (And webkit broke.)
+                    +"like automated testing, or CI, using GitHub Actions, "
+                    +"and deployment to AWS Amplify. End to end testing too, "
+                    +"using Playwright to simulate Chromium, Firefox, and--",
+                    // (And webkit crashed on my machine.)
                callback: () => {
                   this.setScene( "red light coming" );
                }
