@@ -5,6 +5,7 @@ import React from 'react';
 import './TextPrompt.css';
 ///////////////////////////////////////////////////////////////////////////////
 
+//-----------------------------------------------------------------------------
 class TextPrompt extends Engine.Entity {
    //--------------------------------------------------------------------------
    // `x, y` are the coordinates of the center of the string.

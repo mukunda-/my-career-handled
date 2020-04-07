@@ -6,13 +6,23 @@ import Engine from '../Engine';
 ///////////////////////////////////////////////////////////////////////////////
 const howls = [];
 
+class DummyHowl {
+   play() {}
+   fade() {}
+   state() { return "loaded"; }
+}
+
 //-----------------------------------------------------------------------------
 // Accepts the same input as Howl and returns the same, just a proxy to keep
 //                                          track of what needs to be loaded.
 function load( options ) {
-   const howl = new Howl( options )
-   howls.push( howl );
-   return howl;
+   //if( process.env.JEST_WORKER_ID !== undefined ) {
+   //   return new DummyHowl();
+   //} else {
+      const howl = new Howl( options )
+      howls.push( howl );
+      return howl;
+   //}
 }
 
 //-----------------------------------------------------------------------------

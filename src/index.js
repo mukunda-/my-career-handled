@@ -11,6 +11,7 @@ import './Base.css';
 let currentScreenSize = [0, 0];
 let viewportScale     = 1.0;
 
+console.log( "Deployment mode:", process.env.NODE_ENV );
 //-----------------------------------------------------------------------------
 // Returns the pixel dimensions of the user's client area.
 function getDeviceDimensions() {
@@ -77,16 +78,17 @@ function onTap( e ) {
 }
 
 //-----------------------------------------------------------------------------
-// Debug functions - not quite sure yet how to only enable this for debug
-//  builds.
-function onKeyDown() {
-   Engine.setTimeScale( 25 );
+// Fast-forward feature for development builds.
+if( process.env.NODE_ENV === "development" ) {
+   function onKeyDown() {
+      Engine.setTimeScale( 25 );
+   }
+   function onKeyUp() {
+      Engine.setTimeScale( 1.0 );
+   }
+   document.addEventListener('keyup', onKeyUp);
+   document.addEventListener('keydown', onKeyDown);
 }
-function onKeyUp() {
-   Engine.setTimeScale( 1.0 );
-}
-document.addEventListener('keyup', onKeyUp);
-document.addEventListener('keydown', onKeyDown);
 
 //-----------------------------------------------------------------------------
 // Viewport sits at the top level, typically with a Scene as the only child

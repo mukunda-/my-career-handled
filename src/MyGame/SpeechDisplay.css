@@ -55,6 +55,7 @@
   padding: 8px;
   position: absolute;
   top: -12px;
+  user-select: none;
 }
 
 /* Normally, when slowly rendering words to the screen, they may start on an
