@@ -7,6 +7,7 @@ body {
 
   /* Hide scrollbars */
   overflow: hidden;
+  z-index: -50;
 }
 
 /* Viewport sits centered in the body. We use JavaScript magic to do that,
@@ -15,7 +16,9 @@ body {
   margin: 0px auto;
   transform-origin: top left;
   overflow: hidden;
-  z-index: -15;
+
+  /* Always on top to intercept clicks. Maybe a bit of a hacky solution... */
+  z-index: 50; 
 }
 
 /* The Scene is the container for all of the game elements, and includes the
