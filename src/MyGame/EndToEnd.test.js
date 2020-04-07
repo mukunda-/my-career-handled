@@ -5,46 +5,66 @@ import playwright from 'playwright';
 const server = express();
 let serverInstance = null;
 
+//-----------------------------------------------------------------------------
+// Before any tests in here, start up a webserver to host the production build.
+// Build must be done beforehand (npm run build).
 beforeAll(() => {
-   //server.use( express.static( 'build', {} ));
-   /*
-   server.get( '/', (req, res) => {
-      res.send('Hello World!');
-   });*/
+   server.use( express.static( 'build', {} ));
 
-   //serverInstance = server.listen( 3000, () => {
-   //   console.log( 'Express webserver started!' );
-   //});
-   
+   serverInstance = server.listen( 3001, () => {
+      console.log( 'Express webserver started!' );
+   });
 });
 
+//-----------------------------------------------------------------------------
+// Clean up when we're done.
 afterAll(() => {
    if( serverInstance !== null ) {
       serverInstance.close();
    }
-   //serverInstance = null;
+   serverInstance = null;
 })
 
-const timeout = seconds => new Promise( res => setTimeout( res, (seconds*1000) ));
+//-----------------------------------------------------------------------------
+async function waitForTapper( page ) {
+   let timeout = 20;
+   let box = null;
+   while( true ) {
+      if( --timeout == 0 ) throw( "Timed out." );
+
+      const elem = await page.waitForSelector('.Sprite.Tapper', { visible: true });
+      box = await elem.boundingBox();
+      // Sometimes I get null even right after the selector is found, hence
+      //  this retry loop.
+      if( box != null ) break;
+   }
+
+   const [mx, my] = [ box.x + box.width/2, box.y + box.height/2 ];
+   console.log( "Tapper at", mx, my );
+   
+   // Just want to make sure that we hit it, even though all of these should
+   //  hit it, every time.
+   // The arrow moves up and down and doesn't point exactly to the tap area.
+   await page.mouse.click( mx, my + 0 );
+   await page.mouse.click( mx, my + 20 );
+   await page.mouse.click( mx, my + 40 );
+   await page.mouse.click( mx, my + 60 );
+
+   // Wait a bit for the tapper to die; the game will progress in the meanwhile
+   //  and this second isn't totally wasted.
+   await page.waitFor( 1000 );
+}
 
 //-----------------------------------------------------------------------------
-// The mommy of all the tests, running it from a web browser simulation.
-test( "e2e production", async () => {
+async function runBrowserTest( browserType ) {
    // We are hosting the production build of the app using express, and then
    //  connecting to that through playwright.
    // The project needs to be built for production before running this test.
-   
-   let browserType = process.env.MFBROWSER || "chromium";
-   console.log( browserType, "START" );
+   console.log( "Launching browser: ", browserType );
    const browser = await playwright[browserType].launch();
-   console.log( browserType, "LAUNCHED" );
    const context = await browser.newContext();
-   console.log( browserType, "MADE CONTEXT" );
    const page = await context.newPage();
-   console.log( browserType, "NEW PAGE" );
-   await page.goto('http://localhost:3000/');
-   console.log( browserType, "VISITED PAGE" );
-
+   await page.goto('http://localhost:3001/');
 
    {
       await page.waitForSelector('.TextPrompt', { visible: true });
@@ -53,7 +73,7 @@ test( "e2e production", async () => {
          // Engine.js exposes this for testing purposes. We're going to fast
          //  forward through everything. In a real production environment, we'd
          //  probably want to normal-speed through the whole thing.
-         DEBUG_setTimeScale( 10 );
+         DEBUG_setTimeScale( 25 );
       });
 
       let timeout = 10;
@@ -71,74 +91,50 @@ test( "e2e production", async () => {
       }
    }
 
-   const [mx,my] = await page.$eval( ".Viewport", el => {
-      return [
-         (el.getBoundingClientRect().left + el.getBoundingClientRect().right) / 2,
-         (el.getBoundingClientRect().top + el.getBoundingClientRect().bottom) / 2
-      ]
-   });
-   console.log( mx, my );
-   await page.mouse.click( mx, my );
-
-   console.log( "PASSED THE BIG CHECKPOINT." );
-
-   page.screenshot({path: 'screenshot.png'});
-   await page.waitForSelector('.Sprite.Tapper', { visible: true });
-   console.log( "FOUND A TAPPER." );
-   
-   await page.waitFor(() => {
-      const elems = document.querySelectorAll( ".Sprite.Tapper" );
-      elems.forEach( e => {
-         if( e.style.backgroundImage.match( /'tapper'/ )) return true;
-         /*
-            // Click it until it blows!
-            const [mx, my] = [
-               (el.getBoundingClientRect().left + el.getBoundingClientRect().right) / 2,
-               (el.getBoundingClientRect().top + el.getBoundingClientRect().bottom) / 2
-            ];
-
-            await page.mouse.click( mx, my );
-            await page.waitFor( 100 );
-         }*/
-      });
-      return false;
-   });
-   console.log( "found a tapper." );
-
    {
-      const [mx, my] = await page.$$eval( ".Sprite", elems => {
-         elems.forEach( e => {
-            if( e.style.backgroundImage.match( /'tapper'/ )) {
-               return [
-                  (e.getBoundingClientRect().left + e.getBoundingClientRect().right) / 2,
-                  (e.getBoundingClientRect().top + e.getBoundingClientRect().bottom) / 2
-               ];
-            }
-         });
+      const [mx,my] = await page.$eval( ".Viewport", el => {
+         return [
+            (el.getBoundingClientRect().left + el.getBoundingClientRect().right) / 2,
+            (el.getBoundingClientRect().top + el.getBoundingClientRect().bottom) / 2
+         ]
       });
-
-      // Just want to make sure that we hit it, even though all of these should
-      //  hit it, every time.
-      // The arrow moves up and down and doesn't point exactly to the tap area.
-      page.mouse.click( mx, my + 20 );
-      page.mouse.click( mx, my + 40 );
-      page.mouse.click( mx, my + 60 );
+      console.log( mx, my );
+      await page.mouse.click( mx, my );
    }
 
-   await page.screenshot({path: 'screenshot.png'});
+   // Need to pass the two tappers at the start that require user input.
+   await waitForTapper( page );
+   await waitForTapper( page );
+   //await page.screenshot({path: `debug/screenshot-${browserType}-mid.png`} );
+
+   // Then we smooth sail to the end, waiting to see the tagline under the
+   //  Handled icon.
+   {
+      await page.waitForSelector('.hireme', { visible: true, timeout: 60000 });
+      const result = await page.$eval( ".hireme", el => el.innerHTML );
+      expect( result ).toMatch( /i want to be a part of your change/i );
+   }
+
+   //await page.screenshot({path: `debug/screenshot-${browserType}-final.png`} );
    await browser.close();
-   /*
-   await page.waitForSelector('#thebutton', { visible: true });
-   console.log( browserType, "FOUND SELECTOR" );
-   await page.click('#thebutton');
-   console.log( browserType, "CLICKED THE MF BUTTON" );
-   const result = await page.$eval('#answer', (el:any) => el.innerHTML);
-   console.log( browserType, "FETCHED THE RESULT" );
-   await browser.close();
-   console.log( browserType, "IS IT COFFEE?" );
-   expect(result).toEqual('coffee');
-   console.log( browserType, "I THINK SO" );*/
-   
-}, 20000);
+}
+
+//-----------------------------------------------------------------------------
+// The mommy of all the tests, running it from a web browser simulation.
+// This is totally overkill for this little game, but it's for the exercise...
+test( "e2e production chromium", async () => {
+   await runBrowserTest( "chromium" );
+}, 50000);
+
+test( "e2e production firefox", async () => {
+   // I actually discovered that my stuff didn't work in Firefox from this
+   //  test.
+   await runBrowserTest( "firefox" );
+}, 50000);
+
+test( "e2e production webkit", async () => {
+   // (TODO: this just crashes for me currently.)
+   //await runBrowserTest( "webkit" );
+}, 50000);
 
 ///////////////////////////////////////////////////////////////////////////////
