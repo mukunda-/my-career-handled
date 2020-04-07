@@ -229,6 +229,9 @@ class Entity {
    render() {}
 }
 
+window.DEBUG_setTimeScale = setTimeScale
+window.DEBUG_getTimeScale = getTimeScale
+
 ///////////////////////////////////////////////////////////////////////////////
 export default {
    reset, makeKey, getTime, updateTime, getCamera, setCamera, Entity,
