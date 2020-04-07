@@ -7,6 +7,8 @@ import Engine from '../Engine';
 const howls = [];
 
 //-----------------------------------------------------------------------------
+// Accepts the same input as Howl and returns the same, just a proxy to keep
+//                                          track of what needs to be loaded.
 function load( options ) {
    const howl = new Howl( options )
    howls.push( howl );
@@ -14,11 +16,13 @@ function load( options ) {
 }
 
 //-----------------------------------------------------------------------------
+// Returns 1 when everything is loaded, and less than 1 for what percentage is
+//  loaded (0.3 = 30%).
 function loadingProgress() {
    let loadingCount = 0;
    let totalCount = 0;
    howls.forEach( h => {
-      if( h.state() == "loading" ) {
+      if( h.state() === "loading" ) {
          loadingCount++;
       }
       totalCount ++;
