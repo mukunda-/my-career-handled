@@ -382,7 +382,7 @@ class State extends Engine.Entity {
                text: "This is my first React app, built in a few days as an "
                     +"exercise to get myself in shape for my new role."
                     +">>>>>> I'll be back-end, but it doesn't hurt at all to "
-                    +"be familiar with the fr--",
+                    +"be familiar with the front-end technologies so I--",
                callback: () => {
                   // Suddenly, a stop sign.
                   this.setScene( "stopsign" );
@@ -431,10 +431,10 @@ class State extends Engine.Entity {
             this.speech.start({
                actor: Actors.mukunda,
                text: "Actually, it was kind of the opposite, Chris..."
-                    +">>>>> So anyway, this app also employs some neat things "
+                    +">>>>>>> So anyway, this app also employs some neat things "
                     +"like automated testing, or CI, and deployment to AWS "
-                    +"services. End to end testing too, using Chromium, "
-                    +"Firefox, and--",
+                    +"Amplify. End to end testing too, using playwright to "
+                    +"simulate Chromium, Firefox, and--",
                callback: () => {
                   this.setScene( "red light coming" );
                }
@@ -468,7 +468,7 @@ class State extends Engine.Entity {
          break;
       //-----------------------------------------------------------------------
       case "red light coming 3":
-         afterDelay( 1.5, () => {
+         afterDelay( 1.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
 
