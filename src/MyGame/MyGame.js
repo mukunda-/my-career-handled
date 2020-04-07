@@ -431,7 +431,7 @@ class State extends Engine.Entity {
             this.speech.start({
                actor: Actors.mukunda,
                text: "Actually, it was kind of the opposite, Chris..."
-                    +">>>>> so anyway, this app also employs some neat things "
+                    +">>>>> So anyway, this app also employs some neat things "
                     +"like automated testing, or CI, and deployment to AWS "
                     +"services. End to end testing too, using Chromium, "
                     +"Firefox, and--",
@@ -738,7 +738,7 @@ class State extends Engine.Entity {
 
             this.setScene( "start-wait" );
          }
-         
+         break;
       //-----------------------------------------------------------------------
       // For the stop sign scene, wait for the truck to pass the sign before
       //                                     progressing into the next scene.
