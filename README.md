@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/mukunda-/my-career-handled/workflows/Node.js%20CI/badge.svg)
+
 **My Career, Handled!**
 
 A little app for my potential pals at handled.com.
