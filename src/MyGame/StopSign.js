@@ -22,12 +22,12 @@ class StopSign extends Engine.Entity {
    //  once it goes out of range, but I don't think that's too important for
    //  this app...
    render() {
-      const [x, y] = Engine.translate( this.x - 32/2, this.y - 40 );
+      const [x, y] = Engine.translate( this.x - 32/2, this.y - 80 );
       return (
          <Sprite src={{
                x, y,
                width: 32,
-               height: 40,
+               height: 80,
                texture: stopTexture
             }}
             key={this.key}
