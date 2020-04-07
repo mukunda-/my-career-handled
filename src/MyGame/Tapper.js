@@ -75,8 +75,10 @@ class Tapper extends Engine.Entity {
                x, y,
                width:   32,
                height:  32,
-               texture: tapTexture
+               texture: tapTexture,
+               classes: "Tapper"
             }}
+            className="tapper"
             key={this.key}
          />,
       ]);

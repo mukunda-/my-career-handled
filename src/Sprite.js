@@ -35,7 +35,8 @@ let Sprite = ( props ) => {
       style.opacity = props.src.opacity;
    }
 
-   return <div className="Sprite" style={style}>{props.children}</div>;
+   const classes = `${("Sprite " + (props.src.classes || "")).trim()}`;
+   return <div className={classes} style={style}>{props.children}</div>;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
