@@ -563,7 +563,7 @@ class State extends Engine.Entity {
                text: "Just so you're aware,>>> Chris,>>> because communication "
                     +"is key to success in a business: I didn't pack any Oxygen."
                     +">>>>>>>>> I'm willing to be flexible though, to be a part "
-                    +"of your superb company.",
+                    +"of your superb startup company.",
                callback: () => this.setScene( "to space 3" )
             });
          });
@@ -670,7 +670,7 @@ class State extends Engine.Entity {
          afterDelay( 3.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "What a legend...>>>>>>>>>> I feel the life returning to me...",
+               text: "What a thrilling sentiment...>>>>>>>>>> I feel the life returning to me...",
                callback: () => this.setScene( "station 5" )
             });
          });
