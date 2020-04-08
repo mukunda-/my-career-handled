@@ -670,7 +670,7 @@ class State extends Engine.Entity {
          afterDelay( 3.0, () => {
             this.speech.start({
                actor: Actors.mukunda,
-               text: "What a thrilling sentiment...>>>>>>>>>> I feel the life returning to me...",
+               text: "...what a powerful sentiment...>>>>>>>>>> I hope I can live up to his expectations...",
                callback: () => this.setScene( "station 5" )
             });
          });
