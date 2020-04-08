@@ -101,31 +101,7 @@ class State extends Engine.Entity {
          width: Engine.getDisplaySize()[0],
          text: "Loading..."
       });
-
-      // Debug: clean up later.
-      /*
-      this.state = "start5";
-      this.dude.moveTo( 100 );
-      this.dude.useCell();
-      this.speech.start({
-         actor: Actors.mukunda,
-         text: "Ready!"
-      });
-
-      this.chris.spawn( camera[0] + 200, roadLevel );
-      this.chris.moveTo( this.crap.x );
-      this.speech.start({
-         actor: Actors.chris,
-         text: "Hello, my dear new programmer slave."
-      });
-*/
-//this.truck.x = 50;
-//this.truck.gogogo();
-//this.truck.fly();
-//this.followTruck =true;
-//      this.scene = "to space 5";
       this.onSceneStart( this.scene );
-      
    }
 
    //--------------------------------------------------------------------------
@@ -286,8 +262,8 @@ class State extends Engine.Entity {
             this.chris.moveTo( this.crap.x );
             this.speech.start({
                actor: Actors.chris,
-               // Chris is very nonchalant about his new programmer slave.
-               text: "Hello, my dear new programmer slave.>>>>>>>> Let's get you to work.",
+               // Chris is very excited.
+               text: "Hello, my dearest new programmer pal.>>>>>>>> Let's get you to work.",
                callback: () => {
                   this.setScene( "hi chris" );
                }
